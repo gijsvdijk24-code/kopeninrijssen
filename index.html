@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kopen in Rijssen – Alles uit Rijssen, gewoon thuisbezorgd</title>
+<meta name="description" content="Shop online bij de winkels uit Rijssen. Eén mandje, één keer afrekenen, thuisbezorgd of gratis afhalen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --groen:#1F4D3A; --groen-donker:#13321F; --geel:#F2B630; --oranje:#C2410C;
+  --tekst:#1B1F1C; --grijs:#5A5F5B; --bg:#F6F4EE; --wit:#FFFFFF; --lijn:#E3DFD3;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:'Figtree',system-ui,sans-serif;color:var(--tekst);background:var(--bg);line-height:1.4}
+a{color:var(--groen)}a:hover{color:var(--groen-donker)}
+img{max-width:100%;display:block}
+.wrap{max-width:1280px;margin:0 auto;padding:0 24px}
+.display{font-family:'Bricolage Grotesque',sans-serif;font-weight:800;letter-spacing:-0.02em}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:54px;padding:0 28px;border-radius:14px;font:inherit;font-weight:700;font-size:17px;text-decoration:none;border:none;cursor:pointer}
+.btn-geel{background:var(--geel);color:var(--tekst)}.btn-geel:hover{background:#E5A817;color:var(--tekst)}
+.btn-groen{background:var(--groen);color:var(--wit)}.btn-groen:hover{background:var(--groen-donker);color:var(--wit)}
+.btn-rand{border:1.5px solid #8FB59C;color:var(--wit);font-weight:600}.btn-rand:hover{background:rgba(255,255,255,.08);color:var(--wit)}
+.ph{display:flex;align-items:center;justify-content:center;text-align:center;padding:12px;font-weight:600}
+
+/* Topbalk & header */
+.topbalk{background:var(--groen);color:#EAF2EC;font-size:14px}
+.topbalk .wrap{padding-top:10px;padding-bottom:10px;display:flex;flex-wrap:wrap;gap:8px 24px;justify-content:space-between}
+header{background:var(--wit);border-bottom:1px solid var(--lijn)}
+.header-rij{padding-top:18px;padding-bottom:18px;display:flex;flex-wrap:wrap;align-items:center;gap:16px 32px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--tekst)}
+.logo-icoon{width:44px;height:44px;border-radius:12px;background:var(--groen);display:flex;align-items:center;justify-content:center}
+.logo-tekst{font-size:24px}.logo-tekst span{color:var(--oranje)}
+.zoek{flex:999 1 320px;display:flex;min-width:0}
+.zoek input{flex:1;min-width:0;height:48px;padding:0 16px;border:1.5px solid #D6D1C2;border-right:none;border-radius:12px 0 0 12px;font:inherit;font-size:16px;background:#FBFAF6}
+.zoek button{height:48px;width:56px;border:none;border-radius:0 12px 12px 0;background:var(--groen);color:var(--wit);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.account{display:flex;gap:8px}
+.account a{display:flex;align-items:center;gap:8px;height:48px;padding:0 14px;border-radius:12px;text-decoration:none;color:var(--tekst);font-weight:600}
+.account a.mandje{background:var(--geel);font-weight:700;padding:0 16px}
+.cat-nav{padding-bottom:14px;display:flex;flex-wrap:wrap;gap:6px 28px;font-weight:600;font-size:15px}
+.cat-nav a{text-decoration:none}
+.cat-nav a.accent{color:var(--oranje)}
+
+/* Hero */
+.hero{padding-top:48px;padding-bottom:24px}
+.hero-rij{display:flex;flex-wrap:wrap;gap:24px;align-items:stretch}
+.hero-tekst{flex:999 1 520px;background:var(--groen);color:var(--wit);border-radius:28px;padding:56px 48px;display:flex;flex-direction:column;justify-content:center;gap:24px}
+.label{align-self:flex-start;background:var(--geel);color:var(--tekst);font-weight:700;font-size:14px;padding:6px 14px;border-radius:999px}
+.hero h1{margin:0;font-size:clamp(40px,6vw,64px);line-height:1.02;letter-spacing:-0.03em}
+.hero p{margin:0;font-size:19px;line-height:1.55;color:#D5E5DA;max-width:520px}
+.knoppen{display:flex;flex-wrap:wrap;gap:12px}
+.hero-fotos{flex:1 1 360px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;min-height:420px}
+.hero-fotos .groot{grid-column:span 2;border-radius:24px;background:#DCD5C2;color:#6B6455}
+.hero-fotos .klein1{border-radius:24px;background:#E8C9B5;color:#6E4A36}
+.hero-fotos .klein2{border-radius:24px;background:#C9D9CE;color:#3D5A47}
+
+/* USP's */
+.usps{padding-top:8px;padding-bottom:40px}
+.grid-usp{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.usp{background:var(--wit);border-radius:18px;padding:22px;display:flex;gap:14px;align-items:center}
+.usp b{display:block}.usp small{font-size:14px;color:var(--grijs)}
+
+/* Secties */
+.sectie{padding-top:24px;padding-bottom:48px}
+.sectie-kop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:12px;margin-bottom:24px}
+.sectie-kop h2{margin:0;font-size:clamp(30px,4vw,40px)}
+.sectie-kop a{font-weight:600}
+.boven{font-weight:700;color:var(--oranje);margin-bottom:6px}
+.grid-cat{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.cat{text-decoration:none;color:var(--tekst);border-radius:22px;padding:22px;height:160px;display:flex;flex-direction:column;justify-content:space-between;transition:transform .15s}
+.cat:hover{transform:translateY(-3px);color:var(--tekst)}
+.cat span{font-weight:700;font-size:18px}
+
+.producten{background:var(--wit);padding:64px 0}
+.grid-prod{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px}
+.prod{display:flex;flex-direction:column;gap:12px}
+.prod-foto{aspect-ratio:1/1;border-radius:20px;background:#EFEBE0;color:#6B6455;position:relative}
+.fav{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:999px;border:none;background:var(--wit);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.prod .winkel{font-size:14px;color:var(--grijs);font-weight:600}
+.prod .naam{font-weight:700;font-size:17px;margin-top:-6px}
+.prod .onder{display:flex;align-items:center;justify-content:space-between}
+.prod .prijs{font-weight:800;font-size:19px}
+.prod .onder button{height:44px;padding:0 16px;border-radius:12px;border:none;background:var(--groen);color:var(--wit);font:inherit;font-weight:700;cursor:pointer}
+
+.winkels{padding-top:64px;padding-bottom:64px}
+.grid-winkel{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.winkelkaart{text-decoration:none;color:var(--tekst);background:var(--wit);border-radius:24px;overflow:hidden;display:flex;flex-direction:column}
+.winkelkaart:hover{color:var(--tekst)}
+.winkelkaart .foto{height:180px;color:#5A5446}
+.winkelkaart .info{padding:22px;display:flex;flex-direction:column;gap:6px}
+.winkelkaart .soort{font-size:14px;font-weight:700;color:var(--oranje)}
+.winkelkaart .titel{font-size:22px;font-weight:700}
+.winkelkaart .tekst{font-size:15px;color:var(--grijs)}
+
+.werkt{padding-bottom:64px}
+.werkt-blok{background:var(--geel);border-radius:28px;padding:56px 48px}
+.werkt-blok h2{margin:0 0 32px;font-size:clamp(30px,4vw,40px)}
+.grid-stap{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:32px}
+.stap{display:flex;flex-direction:column;gap:10px}
+.stap .nr{width:48px;height:48px;border-radius:999px;background:var(--tekst);color:var(--geel);font-weight:800;font-size:20px;display:flex;align-items:center;justify-content:center}
+.stap b{font-size:20px}.stap p{margin:0;font-size:16px;line-height:1.5}
+
+.ondernemers{padding-bottom:64px}
+.ond-blok{display:flex;flex-wrap:wrap;gap:32px;align-items:center;background:var(--wit);border-radius:28px;padding:40px 48px}
+.ond-blok div{flex:999 1 420px;display:flex;flex-direction:column;gap:12px}
+.ond-blok h2{margin:0;font-size:34px}
+.ond-blok p{margin:0;font-size:17px;line-height:1.55;color:#3F4440}
+
+/* Footer */
+footer{background:var(--groen-donker);color:#D5E5DA}
+footer .wrap{padding-top:56px;padding-bottom:32px;display:flex;flex-direction:column;gap:48px}
+.nieuws{display:flex;flex-wrap:wrap;gap:24px 48px;justify-content:space-between;align-items:center}
+.nieuws > div{flex:1 1 360px}
+.nieuws .kop{font-size:28px;color:var(--wit)}
+.nieuws form{flex:1 1 380px;display:flex;flex-wrap:wrap;gap:10px}
+.nieuws input{flex:1 1 220px;height:52px;padding:0 16px;border-radius:12px;border:1.5px solid #3C6A50;background:var(--groen);color:var(--wit);font:inherit;font-size:16px}
+.nieuws input::placeholder{color:#A9C4B2}
+.nieuws button{height:52px;padding:0 24px;border-radius:12px;border:none;background:var(--geel);color:var(--tekst);font:inherit;font-weight:700;cursor:pointer}
+.grid-footer{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:32px;border-top:1px solid #2E5A42;padding-top:40px}
+.grid-footer > div{display:flex;flex-direction:column;gap:10px;font-size:15px}
+.grid-footer b{color:var(--wit)}
+.grid-footer a{color:#D5E5DA;text-decoration:none}.grid-footer a:hover{color:var(--wit)}
+.footer-logo{font-size:22px;color:var(--wit)}.footer-logo span{color:var(--geel)}
+.onderregel{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:14px;color:#A9C4B2}
+
+@media (max-width:600px){
+  .hero-tekst,.werkt-blok,.ond-blok{padding:36px 24px}
+  .hero-fotos{min-height:300px}
+  .account a.inloggen span{display:none}
+}
+</style>
+</head>
+<body>
+
+<div class="topbalk"><div class="wrap">
+  <span>Bezorging in Rijssen en omgeving · [BEZORGDAG / TIJD]</span>
+  <span>Of haal gratis af bij de winkel</span>
+</div></div>
+
+<header>
+  <div class="wrap header-rij">
+    <a href="/" class="logo" aria-label="Kopen in Rijssen, naar de homepage">
+      <span class="logo-icoon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F2B630" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6"/><path d="M5 9v11h14V9"/><path d="M10 20v-6h4v6"/></svg></span>
+      <span class="logo-tekst display">kopen<span>in</span>rijssen</span>
+    </a>
+    <form class="zoek" role="search" onsubmit="return false">
+      <label for="zoek" class="sr-only">Zoeken</label>
+      <input id="zoek" type="search" placeholder="Zoek producten of winkels in Rijssen">
+      <button type="submit" aria-label="Zoeken"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    </form>
+    <nav class="account" aria-label="Account">
+      <a href="#" class="inloggen"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span>Inloggen</span></a>
+      <a href="#" class="mandje"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11h11l2-8H6.2"/><circle cx="9" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg>Mandje (0)</a>
+    </nav>
+  </div>
+  <nav class="wrap cat-nav" aria-label="Categorieën">
+    <a href="#">Eten &amp; drinken</a><a href="#">Mode</a><a href="#">Wonen &amp; cadeaus</a><a href="#">Bloemen</a><a href="#">Boeken</a><a href="#">Sport</a><a href="#">Cadeaubon</a><a href="#" class="accent">Alle winkels</a>
+  </nav>
+</header>
+
+<main>
+<section class="wrap hero">
+  <div class="hero-rij">
+    <div class="hero-tekst">
+      <span class="label">Lokaal winkelen, online</span>
+      <h1 class="display">Alles uit Rijssen.<br>Gewoon thuisbezorgd.</h1>
+      <p>Shop bij de winkels die je al kent. Eén mandje, één keer afrekenen, en je steunt de winkels in je eigen stad.</p>
+      <div class="knoppen">
+        <a href="#producten" class="btn btn-geel">Begin met shoppen</a>
+        <a href="#winkels" class="btn btn-rand">Bekijk de winkels</a>
+      </div>
+    </div>
+    <div class="hero-fotos">
+      <div class="ph groot">[FOTO: Rijssense winkelstraat]</div>
+      <div class="ph klein1">[FOTO: ondernemer]</div>
+      <div class="ph klein2">[FOTO: product]</div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap usps" aria-label="Voordelen">
+  <div class="grid-usp">
+    <div class="usp"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg><div><b>Lokaal bezorgd</b><small>Door Rijssen, voor Rijssen</small></div></div>
+    <div class="usp"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 10l8-6 8 6v10H4z"/><path d="M9 20v-5h6v5"/></svg><div><b>Gratis afhalen</b><small>Bij de winkel zelf</small></div></div>
+    <div class="usp"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/></svg><div><b>Veilig betalen</b><small>Met iDEAL en meer</small></div></div>
+    <div class="usp"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-4.5-7-11a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 6.5-7 11-7 11z"/></svg><div><b>Steun je stad</b><small>Je geld blijft in Rijssen</small></div></div>
+  </div>
+</section>
+
+<section class="wrap sectie">
+  <div class="sectie-kop"><h2 class="display">Waar ben je naar op zoek?</h2><a href="#">Alle categorieën →</a></div>
+  <div class="grid-cat">
+    <a href="#" class="cat" style="background:#FBE7B6"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1B1F1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11h16l-1.5 9h-13z"/><path d="M8 11l2-6M16 11l-2-6"/></svg><span>Eten &amp; drinken</span></a>
+    <a href="#" class="cat" style="background:#D7E6DC"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1B1F1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 3l-5 4 2 4 2-1v11h10V10l2 1 2-4-5-4c-.5 1.5-2 2.5-4 2.5S8.5 4.5 8 3z"/></svg><span>Mode</span></a>
+    <a href="#" class="cat" style="background:#F3D3C2"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1B1F1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="9" width="18" height="12" rx="1"/><path d="M12 9v12M3 13h18"/><path d="M12 9c-2-4-6-4-6-1.5S10 9 12 9c2 0 6 0 6-1.5S14 5 12 9z"/></svg><span>Wonen &amp; cadeaus</span></a>
+    <a href="#" class="cat" style="background:#E4DEF0"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1B1F1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="3"/><path d="M12 5a3 3 0 0 0-3-3M12 5a3 3 0 0 1 3-3M9 8a3 3 0 0 0-3 3M15 8a3 3 0 0 1 3 3"/><path d="M12 11v10M12 16c-2-2-5-2-6-1M12 18c2-2 5-2 6-1"/></svg><span>Bloemen &amp; planten</span></a>
+    <a href="#" class="cat" style="background:#D3E3EE"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1B1F1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5c3-1 6-1 8 1 2-2 5-2 8-1v14c-3-1-6-1-8 1-2-2-5-2-8-1z"/><path d="M12 6v14"/></svg><span>Boeken &amp; hobby</span></a>
+    <a href="#" class="cat" style="background:#EDE6D6"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#1B1F1C" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 3c3 3 3 15 0 18M3 12h18M5 6c4 2 10 2 14 0M5 18c4-2 10-2 14 0"/></svg><span>Sport &amp; vrije tijd</span></a>
+  </div>
+</section>
+
+<section class="producten" id="producten">
+  <div class="wrap">
+    <div class="sectie-kop"><div><div class="boven">Nu populair in Rijssen</div><h2 class="display">Lokale favorieten</h2></div><a href="#">Bekijk alles →</a></div>
+    <div class="grid-prod" id="productlijst"></div>
+  </div>
+</section>
+
+<section class="wrap winkels" id="winkels">
+  <div class="sectie-kop"><h2 class="display">Ontmoet de winkels</h2><a href="#">Alle winkels →</a></div>
+  <div class="grid-winkel" id="winkellijst"></div>
+</section>
+
+<section class="wrap werkt">
+  <div class="werkt-blok">
+    <h2 class="display">Zo werkt het</h2>
+    <div class="grid-stap">
+      <div class="stap"><span class="nr">1</span><b>Kies je producten</b><p>Vul één mandje met spullen van verschillende winkels.</p></div>
+      <div class="stap"><span class="nr">2</span><b>Reken in één keer af</b><p>Betaal veilig online. Wij regelen de rest met de winkels.</p></div>
+      <div class="stap"><span class="nr">3</span><b>Bezorgd of afhalen</b><p>Laat het thuis bezorgen of haal het op in de winkel.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap ondernemers">
+  <div class="ond-blok">
+    <div><h2 class="display">Heb je een winkel in Rijssen?</h2><p>Verkoop online zonder eigen webshop. Wij helpen je op weg.</p></div>
+    <a href="mailto:[JOUW@EMAIL.NL]?subject=Aanmelden%20winkel" class="btn btn-groen">Meld je winkel aan</a>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="nieuws">
+      <div><div class="kop display">Nieuws uit de winkels</div><div style="margin-top:6px">Acties en nieuwe winkels, één keer per maand.</div></div>
+      <form onsubmit="return false">
+        <label for="mail" class="sr-only">E-mailadres</label>
+        <input id="mail" type="email" placeholder="jouw@email.nl" required>
+        <button type="submit">Aanmelden</button>
+      </form>
+    </div>
+    <div class="grid-footer">
+      <div><span class="footer-logo display">kopen<span>in</span>rijssen</span><span>Het online winkelcentrum van Rijssen.</span></div>
+      <div><b>Shoppen</b><a href="#winkels">Alle winkels</a><a href="#">Categorieën</a><a href="#">Cadeaubon</a></div>
+      <div><b>Klantenservice</b><a href="#">Bezorgen &amp; afhalen</a><a href="#">Retourneren</a><a href="#">Contact</a></div>
+      <div><b>Ondernemers</b><a href="#">Winkel aanmelden</a><a href="#">Hoe het werkt</a></div>
+    </div>
+    <div class="onderregel"><span>© 2026 kopeninrijssen.nl</span><span>Privacy · Voorwaarden · Cookies</span></div>
+  </div>
+</footer>
+
+<script>
+// Pas hier de producten en winkels aan
+const producten = [
+  { winkel: "[WINKEL]", naam: "[Productnaam 1]", prijs: "[PRIJS]" },
+  { winkel: "[WINKEL]", naam: "[Productnaam 2]", prijs: "[PRIJS]" },
+  { winkel: "[WINKEL]", naam: "[Productnaam 3]", prijs: "[PRIJS]" },
+  { winkel: "[WINKEL]", naam: "[Productnaam 4]", prijs: "[PRIJS]" }
+];
+const winkels = [
+  { soort: "Bakker", naam: "[WINKELNAAM]", tekst: "[Korte zin over de winkel en de eigenaar]", kleur: "#F3E2C4" },
+  { soort: "Kleding", naam: "[WINKELNAAM]", tekst: "[Korte zin over de winkel en de eigenaar]", kleur: "#D7E6DC" },
+  { soort: "Cadeauwinkel", naam: "[WINKELNAAM]", tekst: "[Korte zin over de winkel en de eigenaar]", kleur: "#F3D3C2" }
+];
+
+const hart = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B1F1C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>';
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+document.getElementById('productlijst').innerHTML = producten.map(p => `
+  <article class="prod">
+    <div class="prod-foto ph">[FOTO PRODUCT]<button type="button" class="fav" aria-label="Bewaar als favoriet">${hart}</button></div>
+    <div class="winkel">${esc(p.winkel)}</div>
+    <div class="naam">${esc(p.naam)}</div>
+    <div class="onder"><span class="prijs">€ ${esc(p.prijs)}</span><button type="button">In mandje</button></div>
+  </article>`).join('');
+
+document.getElementById('winkellijst').innerHTML = winkels.map(w => `
+  <a href="#" class="winkelkaart">
+    <div class="foto ph" style="background:${esc(w.kleur)}">[FOTO WINKEL]</div>
+    <div class="info"><span class="soort">${esc(w.soort)}</span><span class="titel display">${esc(w.naam)}</span><span class="tekst">${esc(w.tekst)}</span></div>
+  </a>`).join('');
+</script>
+</body>
+</html>
