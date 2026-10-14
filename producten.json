@@ -26,7 +26,7 @@
     "specificaties": [
       {
         "naam": "Verkocht per",
-        "waarde": "1,44 m² (€ 39,00 per m²)"
+        "waarde": "Per doos van 1,44 m²"
       },
       {
         "naam": "Merk",
@@ -80,7 +80,11 @@
         "naam": "Maattolerantie",
         "waarde": "Maximaal 5 mm per tegel"
       }
-    ]
+    ],
+    "eenheidsprijs": 39,
+    "eenheid": "m²",
+    "inhoud": 1.44,
+    "verpakking": "doos"
   },
   {
     "id": "p39f43dccbvj",

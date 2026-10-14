@@ -120,6 +120,11 @@ details.kaart form{margin-top:20px}
               <option>Eten &amp; drinken</option><option>Mode</option><option>Wonen &amp; cadeaus</option>
               <option>Bloemen &amp; planten</option><option>Boeken &amp; hobby</option><option>Sport &amp; vrije tijd</option><option>Klussen &amp; tuin</option>
             </select></div>
+          <div class="breed" style="border-top:1px solid var(--lijn);padding-top:14px"><b>Verkocht per verpakking?</b> <span style="color:var(--grijs);font-size:14px">Bijv. tegels per doos. Laat leeg voor gewone producten. De prijs hierboven is dan de prijs per verpakking.</span></div>
+          <div><label for="eenheidsprijs">Prijs per eenheid (€)</label><input id="eenheidsprijs" type="number" step="0.01" min="0" placeholder="39,00"></div>
+          <div><label for="eenheid">Eenheid</label><input id="eenheid" placeholder="m²"></div>
+          <div><label for="inhoud">Inhoud per verpakking</label><input id="inhoud" type="number" step="0.001" min="0" placeholder="1,44"></div>
+          <div><label for="verpakking">Verpakking</label><input id="verpakking" placeholder="doos"></div>
           <div class="breed"><label for="link">Link naar product bij de winkel *</label><input id="link" type="url" required placeholder="https://"></div>
           <div class="breed"><label for="afbeelding">Link naar afbeelding</label><input id="afbeelding" type="url" placeholder="https://…jpg"><img id="voorbeeld" class="voorbeeld" alt="Voorbeeld van de afbeelding"></div>
           <div class="breed"><label for="afbeeldingen">Extra foto's (één link per regel)</label><textarea id="afbeeldingen" placeholder="https://…jpg"></textarea></div>
@@ -253,6 +258,8 @@ function vulFormulier(p) {
   $('specificaties').value = (p.specificaties || []).map(s => `${s.naam}: ${s.waarde}`).join('\n');
   $('varianten').value = (p.varianten || []).map(v => `${v.naam}: ${v.prijs != null ? String(v.prijs).replace('.', ',') : ''}`).join('\n');
   $('zichtbaar').checked = p.zichtbaar !== false;
+  $('eenheidsprijs').value = p.eenheidsprijs ?? ''; $('eenheid').value = p.eenheid || '';
+  $('inhoud').value = p.inhoud ?? ''; $('verpakking').value = p.verpakking || '';
   $('formTitel').textContent = 'Product bewerken'; $('handmatig').open = true;
   toonVoorbeeld(); $('handmatig').scrollIntoView({ behavior: 'smooth' });
 }
@@ -325,6 +332,11 @@ $('productForm').addEventListener('submit', async e => {
     afbeelding: $('afbeelding').value.trim(), omschrijving: $('omschrijving').value.trim(),
     zichtbaar: $('zichtbaar').checked, status: 'klaar'
   };
+  const getalOfNull = v => v === '' ? null : Math.round(parseFloat(v) * 1000) / 1000;
+  p.eenheidsprijs = getalOfNull($('eenheidsprijs').value);
+  p.eenheid = $('eenheid').value.trim();
+  p.inhoud = getalOfNull($('inhoud').value);
+  p.verpakking = $('verpakking').value.trim();
   const extra = $('afbeeldingen').value.split('\n').map(s => s.trim()).filter(s => /^https?:\/\//i.test(s));
   p.afbeeldingen = [p.afbeelding, ...extra].filter(Boolean).filter((u, i, a) => a.indexOf(u) === i);
   p.specificaties = $('specificaties').value.split('\n').map(r => { const i = r.indexOf(':'); return i > 0 ? { naam: r.slice(0, i).trim(), waarde: r.slice(i + 1).trim() } : null; }).filter(s => s && s.naam && s.waarde);

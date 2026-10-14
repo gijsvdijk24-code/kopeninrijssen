@@ -208,3 +208,12 @@ footer .wrap{padding-top:56px;padding-bottom:32px;display:flex;flex-direction:co
   .info-blok section,.overzicht{padding:22px}
   .regel .bedrag{min-width:0}
 }
+
+/* Prijs per eenheid (bijv. per m²) */
+.prod .prijs .per{font-size:14px;font-weight:600;color:var(--grijs)}
+.prod .prijs .verpakking{display:block;font-size:13px;font-weight:600;color:var(--grijs);margin-top:2px}
+.koop .prijs-blok{display:flex;flex-direction:column;gap:4px}
+.koop .prijs-sub{font-size:16px;font-weight:600;color:var(--grijs)}
+.koop .prijs-sub b{color:var(--tekst)}
+.koop .reken{font-size:15px;color:var(--grijs);margin-top:-6px}
+.koop .reken b{color:var(--tekst)}

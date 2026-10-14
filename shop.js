@@ -40,6 +40,19 @@ const Mandje = {
   aantal() { return this.lees().reduce((s, r) => s + r.aantal, 0); }
 };
 
+// Producten die per verpakking verkocht worden (bijv. tegels per doos van 1,44 m²)
+const getalNL = n => Number(n).toLocaleString('nl-NL', { maximumFractionDigits: 2 });
+function meervoud(w, n) {
+  if (n === 1 || !w) return w;
+  const vast = { doos: 'dozen', pak: 'pakken', rol: 'rollen', zak: 'zakken', set: 'sets', emmer: 'emmers', pallet: 'pallets', verpakking: 'verpakkingen', bus: 'bussen', fles: 'flessen', blik: 'blikken' };
+  return vast[w.toLowerCase()] || w + 's';
+}
+function heeftEenheid(p) { return p && p.eenheidsprijs != null && p.eenheid; }
+function verpakkingTekst(p) {
+  if (!heeftEenheid(p)) return 'stuk';
+  return `${p.verpakking || 'verpakking'}${p.inhoud ? ` (${getalNL(p.inhoud)} ${p.eenheid})` : ''}`;
+}
+
 function prijsVan(p, variant) {
   const v = (p.varianten || []).find(x => x.naam === variant);
   return v && v.prijs != null ? v.prijs : p.prijs;
@@ -68,13 +81,16 @@ function productKaart(p) {
   const foto = isUrl(p.afbeelding)
     ? `<img src="${esc(p.afbeelding)}" alt="${esc(p.naam)}" loading="lazy">`
     : '<span class="ph" style="width:100%;height:100%">[FOTO PRODUCT]</span>';
-  const vanaf = (p.varianten || []).length > 1 ? 'vanaf ' : '';
+  const vanaf = new Set((p.varianten || []).map(v => v.prijs).filter(x => x != null)).size > 1 ? 'vanaf ' : '';
+  const eenheid = heeftEenheid(p);
   return `
   <article class="prod">
     <a class="prod-foto ph" href="${url}">${foto}</a>
     <div class="winkel">${esc(p.winkel)}</div>
     <div class="naam"><a href="${url}">${esc(p.naam)}</a></div>
-    <div class="onder"><span class="prijs">${vanaf ? '<small style="font-weight:600;font-size:14px">vanaf </small>' : ''}${euro(p.prijs)}</span>
+    <div class="onder"><span class="prijs">${eenheid
+        ? `${euro(p.eenheidsprijs)}<small class="per"> per ${esc(p.eenheid)}</small><small class="verpakking">${euro(p.prijs)} per ${esc(verpakkingTekst(p))}</small>`
+        : `${vanaf ? '<small style="font-weight:600;font-size:14px">vanaf </small>' : ''}${euro(p.prijs)}`}</span>
       ${(p.varianten || []).length > 1
         ? `<a class="bekijk" href="${url}">Kies</a>`
         : `<button type="button" data-in-mandje="${esc(p.id)}">In mandje</button>`}

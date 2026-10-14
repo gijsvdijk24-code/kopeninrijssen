@@ -51,7 +51,7 @@ function render() {
         ${isUrl(r.p.afbeelding) ? `<img src="${esc(r.p.afbeelding)}" alt="">` : '<span class="geen"></span>'}
         <div class="info">
           <a href="product.html?id=${encodeURIComponent(r.p.id)}">${esc(r.p.naam)}</a>
-          <small>${r.variant ? esc(r.variant) + ' · ' : ''}${esc(r.p.winkel)} · ${euro(r.prijs)} per stuk</small>
+          <small>${r.variant ? esc(r.variant) + ' · ' : ''}${esc(r.p.winkel)} · ${euro(r.prijs)} per ${esc(verpakkingTekst(r.p))}${heeftEenheid(r.p) && r.p.inhoud ? ` · totaal ${getalNL(r.aantal * r.p.inhoud)} ${esc(r.p.eenheid)}` : ''}</small>
         </div>
         <div class="stepper">
           <button type="button" data-min="${r.index}" aria-label="Eén minder">−</button>
@@ -141,7 +141,7 @@ async function bestel(lijst, subtotaal, levering) {
 
   // Overzicht voor jou: per product de winkel en de link, zodat je weet waar je het moet halen en declareren
   const productregels = lijst.map(r =>
-    `${r.aantal}x ${r.p.naam}${r.variant ? ' (' + r.variant + ')' : ''} – ${euro(r.prijs)} p/st = ${euro(r.totaal)}\n   Winkel: ${r.p.winkel}${r.p.link ? '\n   Link: ' + r.p.link : ''}`
+    `${r.aantal}x ${r.p.naam}${r.variant ? ' (' + r.variant + ')' : ''} – ${euro(r.prijs)} per ${verpakkingTekst(r.p)}${heeftEenheid(r.p) && r.p.inhoud ? ' (totaal ' + getalNL(r.aantal * r.p.inhoud) + ' ' + r.p.eenheid + ')' : ''} = ${euro(r.totaal)}\n   Winkel: ${r.p.winkel}${r.p.link ? '\n   Link: ' + r.p.link : ''}`
   ).join('\n\n');
   const tekst =
 `Nieuwe bestelling ${nr}

@@ -59,7 +59,11 @@ const VINK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke
       <div class="koop">
         <div class="winkelnaam">${esc(p.winkel)} · uit Rijssen</div>
         <h1 class="display">${esc(p.naam)}</h1>
-        <div class="prijs-groot" id="prijs">${euro(prijsVan(p, varianten[0]?.naam))}</div>
+        ${heeftEenheid(p) ? `
+        <div class="prijs-blok">
+          <div class="prijs-groot">${euro(p.eenheidsprijs)}<small>per ${esc(p.eenheid)}</small></div>
+          <div class="prijs-sub"><b>${euro(p.prijs)}</b> per ${esc(verpakkingTekst(p))}</div>
+        </div>` : `<div class="prijs-groot" id="prijs">${euro(prijsVan(p, varianten[0]?.naam))}</div>`}
 
         ${varianten.length ? `<div>
           <label for="variant">Kies een uitvoering</label>
@@ -69,11 +73,12 @@ const VINK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke
         <div class="aantal-rij">
           <div class="stepper">
             <button type="button" id="min" aria-label="Eén minder">−</button>
-            <input id="aantal" type="number" min="1" max="99" value="1" aria-label="Aantal">
+            <input id="aantal" type="number" min="1" max="99" value="1" aria-label="${heeftEenheid(p) ? 'Aantal ' + esc(p.verpakking || 'verpakkingen') : 'Aantal'}">
             <button type="button" id="plus" aria-label="Eén meer">+</button>
           </div>
           <button type="button" class="btn btn-groen" id="koopKnop">In winkelmandje</button>
         </div>
+        ${heeftEenheid(p) ? `<div class="reken" id="reken"></div>` : ''}
 
         <div class="zekerheden">
           <div>${VINK}<span>Bezorgd in Rijssen en omgeving of gratis afhalen</span></div>
@@ -106,6 +111,16 @@ const VINK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke
   document.getElementById('min').addEventListener('click', () => zet(+aantal.value - 1));
   document.getElementById('plus').addEventListener('click', () => zet(+aantal.value + 1));
   aantal.addEventListener('change', () => zet(+aantal.value));
+  // Rekenregel: hoeveel m² en wat het kost
+  const reken = document.getElementById('reken');
+  const toonReken = () => {
+    if (!reken) return;
+    const n = +aantal.value || 1;
+    const totaalEenheid = p.inhoud ? ` = <b>${getalNL(n * p.inhoud)} ${esc(p.eenheid)}</b>` : '';
+    reken.innerHTML = `${n} ${esc(meervoud(p.verpakking || 'verpakking', n))}${totaalEenheid} · totaal <b>${euro(n * p.prijs)}</b>`;
+  };
+  ['click', 'change', 'input'].forEach(ev => aantal.parentElement.addEventListener(ev, () => setTimeout(toonReken)));
+  toonReken();
 
   document.getElementById('koopKnop').addEventListener('click', () => {
     inMandje(p.id, variantVeld ? variantVeld.value : '', +aantal.value, p.naam);
