@@ -274,7 +274,7 @@ fetch('producten.json?v=' + Date.now())
   .catch(() => [])
   .then(producten => {
     const lijst = document.getElementById('productlijst');
-    const zichtbaar = (Array.isArray(producten) ? producten : []).filter(p => p.zichtbaar !== false);
+    const zichtbaar = (Array.isArray(producten) ? producten : []).filter(p => p.zichtbaar !== false && p.naam && p.status !== 'ophalen' && p.status !== 'fout');
     if (!zichtbaar.length) {
       lijst.innerHTML = '<div class="leeg">Binnenkort vind je hier de eerste producten uit Rijssen.</div>';
       return;

@@ -1,0 +1,40 @@
+name: Productgegevens ophalen
+
+on:
+  push:
+    branches: [main]
+    paths: ['producten.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: producten-ophalen
+  cancel-in-progress: false
+
+jobs:
+  ophalen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Gegevens ophalen van winkelpagina's
+        run: node scripts/ophalen.mjs
+      - name: Opslaan
+        run: |
+          if git diff --quiet producten.json; then
+            echo "Niets nieuws om op te halen."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Productgegevens opgehaald"
+          if ! git pull --rebase origin main; then
+            git rebase --abort
+            echo "Er kwam tussendoor een nieuwe wijziging; de volgende run pakt het op."
+            exit 0
+          fi
+          git push origin main
