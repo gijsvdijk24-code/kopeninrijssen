@@ -20,8 +20,60 @@
     ],
     "specificaties": [
       {
+        "naam": "Verkocht per",
+        "waarde": "1,44 m² (€ 39,00 per m²)"
+      },
+      {
         "naam": "Merk",
         "waarde": "KELD"
+      },
+      {
+        "naam": "Type",
+        "waarde": "Romaans verband"
+      },
+      {
+        "naam": "Formaten",
+        "waarde": "Mix van 60 x 60, 30 x 60 en 45 x 45 cm"
+      },
+      {
+        "naam": "Materiaal",
+        "waarde": "Keramiek"
+      },
+      {
+        "naam": "Kleur",
+        "waarde": "Antraciet / grijs"
+      },
+      {
+        "naam": "Dikte",
+        "waarde": "9 mm"
+      },
+      {
+        "naam": "Afwerking",
+        "waarde": "Mat"
+      },
+      {
+        "naam": "Gerectificeerd",
+        "waarde": "Nee"
+      },
+      {
+        "naam": "Antislipwaarde",
+        "waarde": "R10"
+      },
+      {
+        "naam": "Toepassing",
+        "waarde": "Vloer- of wandtegel"
+      },
+      {
+        "naam": "Vorstbestendig",
+        "waarde": "Ja"
+      },
+      {
+        "naam": "Geschikt voor vloerverwarming",
+        "waarde": "Ja"
+      },
+      {
+        "naam": "Maattolerantie",
+        "waarde": "Maximaal 5 mm per tegel"
       }
     ]
   }
