@@ -77,8 +77,12 @@ header{background:var(--wit);border-bottom:1px solid var(--lijn)}
 .producten{background:var(--wit);padding:64px 0}
 .grid-prod{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:24px}
 .prod{display:flex;flex-direction:column;gap:12px}
-.prod-foto{aspect-ratio:1/1;border-radius:20px;background:#EFEBE0;color:#6B6455;position:relative}
-.fav{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:999px;border:none;background:var(--wit);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.prod-foto{aspect-ratio:1/1;border-radius:20px;background:#EFEBE0;color:#6B6455;overflow:hidden;text-decoration:none}
+.prod-foto img{width:100%;height:100%;object-fit:cover;transition:transform .25s}
+.prod-foto:hover img{transform:scale(1.04)}
+.prod .bekijk{display:inline-flex;align-items:center;height:44px;padding:0 16px;border-radius:12px;background:var(--groen);color:var(--wit);font-weight:700;text-decoration:none}
+.prod .bekijk:hover{background:var(--groen-donker);color:var(--wit)}
+.leeg{grid-column:1/-1;background:var(--bg);border-radius:20px;padding:40px;text-align:center;color:var(--grijs);font-size:17px}
 .prod .winkel{font-size:14px;color:var(--grijs);font-weight:600}
 .prod .naam{font-weight:700;font-size:17px;margin-top:-6px}
 .prod .onder{display:flex;align-items:center;justify-content:space-between}
@@ -254,29 +258,41 @@ footer .wrap{padding-top:56px;padding-bottom:32px;display:flex;flex-direction:co
 </footer>
 
 <script>
-// Pas hier de producten en winkels aan
-const producten = [
-  { winkel: "[WINKEL]", naam: "[Productnaam 1]", prijs: "[PRIJS]" },
-  { winkel: "[WINKEL]", naam: "[Productnaam 2]", prijs: "[PRIJS]" },
-  { winkel: "[WINKEL]", naam: "[Productnaam 3]", prijs: "[PRIJS]" },
-  { winkel: "[WINKEL]", naam: "[Productnaam 4]", prijs: "[PRIJS]" }
-];
+// Producten komen uit producten.json (beheren via beheer.html)
 const winkels = [
   { soort: "Bakker", naam: "[WINKELNAAM]", tekst: "[Korte zin over de winkel en de eigenaar]", kleur: "#F3E2C4" },
   { soort: "Kleding", naam: "[WINKELNAAM]", tekst: "[Korte zin over de winkel en de eigenaar]", kleur: "#D7E6DC" },
   { soort: "Cadeauwinkel", naam: "[WINKELNAAM]", tekst: "[Korte zin over de winkel en de eigenaar]", kleur: "#F3D3C2" }
 ];
 
-const hart = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1B1F1C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.5-7 10-7 10z"/></svg>';
-const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const veiligeUrl = u => /^https?:\/\//i.test(u || '') ? esc(u) : '#';
+const euro = n => (n === '' || n == null || isNaN(n)) ? '' : '€ ' + Number(n).toLocaleString('nl-NL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-document.getElementById('productlijst').innerHTML = producten.map(p => `
-  <article class="prod">
-    <div class="prod-foto ph">[FOTO PRODUCT]<button type="button" class="fav" aria-label="Bewaar als favoriet">${hart}</button></div>
-    <div class="winkel">${esc(p.winkel)}</div>
-    <div class="naam">${esc(p.naam)}</div>
-    <div class="onder"><span class="prijs">€ ${esc(p.prijs)}</span><button type="button">In mandje</button></div>
-  </article>`).join('');
+fetch('producten.json?v=' + Date.now())
+  .then(r => r.ok ? r.json() : [])
+  .catch(() => [])
+  .then(producten => {
+    const lijst = document.getElementById('productlijst');
+    const zichtbaar = (Array.isArray(producten) ? producten : []).filter(p => p.zichtbaar !== false);
+    if (!zichtbaar.length) {
+      lijst.innerHTML = '<div class="leeg">Binnenkort vind je hier de eerste producten uit Rijssen.</div>';
+      return;
+    }
+    lijst.innerHTML = zichtbaar.map(p => {
+      const link = veiligeUrl(p.link);
+      const foto = p.afbeelding && /^https?:\/\//i.test(p.afbeelding)
+        ? `<img src="${esc(p.afbeelding)}" alt="${esc(p.naam)}" loading="lazy">`
+        : '<span class="ph" style="width:100%;height:100%">[FOTO PRODUCT]</span>';
+      return `
+      <article class="prod">
+        <a class="prod-foto ph" href="${link}" target="_blank" rel="noopener">${foto}</a>
+        <div class="winkel">${esc(p.winkel)}</div>
+        <div class="naam">${esc(p.naam)}</div>
+        <div class="onder"><span class="prijs">${euro(p.prijs)}</span><a class="bekijk" href="${link}" target="_blank" rel="noopener">Bekijk</a></div>
+      </article>`;
+    }).join('');
+  });
 
 document.getElementById('winkellijst').innerHTML = winkels.map(w => `
   <a href="#" class="winkelkaart">
