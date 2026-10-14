@@ -21,8 +21,8 @@ for (const p of lijst) {
   try {
     const info = await haal(p.link);
     for (const [k, v] of Object.entries(info)) {
-      if (leeg(v)) continue;
-      if (p.overschrijf || leeg(p[k])) p[k] = v;
+      if (p.overschrijf) { if (leeg(v)) delete p[k]; else p[k] = v; }
+      else if (!leeg(v) && leeg(p[k])) p[k] = v;
     }
     if (!p.naam) throw new Error('Geen productnaam gevonden op de pagina');
     p.status = 'klaar';
@@ -66,9 +66,10 @@ async function haal(url) {
   const kandidaten = [shopify?.body_html, product?.description, blokHtml, m['og:description']?.[0], m['description']?.[0]]
     .filter(Boolean).map(h => ({ html: h, tekst: naarTekst(h) })).filter(k => k.tekst.length > 0);
   const goed = kandidaten.filter(k => !isSeoZin(k.tekst, naam));
-  const gekozen = goed.sort((a, b) => b.tekst.length - a.tekst.length)[0] || null;
+  const gekozen = goed.find(k => k.tekst.length >= 150) || goed.sort((a, b) => b.tekst.length - a.tekst.length)[0] || null;
   const omschrijvingHtml = gekozen?.html || '';
-  const omschrijving = (gekozen?.tekst || '').slice(0, 4000);
+  let omschrijving = gekozen?.tekst || '';
+  if (omschrijving.length > 5000) { const knip = omschrijving.slice(0, 5000); omschrijving = knip.slice(0, Math.max(knip.lastIndexOf('\n'), 3000)).trim(); }
 
   // Foto's
   const fotos = [];
@@ -100,8 +101,9 @@ async function haal(url) {
   // Specificaties
   const specs = new Map();
   const zet = (k, v) => {
-    k = schoon(k).replace(/:$/, ''); v = schoon(v);
+    k = schoon(k).replace(/:$/, ''); v = schoon(v).replace(/\s+\|\s+/g, ', ');
     if (!k || !v || k.length > 40 || v.length > 200) return;
+    if (/bestelcode|leverancier|artikelnummer|artikelcode|\bsku\b|productcode|^model$|hoofdcategorie|^ean$|gtin/i.test(k)) return;
     const sleutel = k.toLowerCase();
     if (![...specs.keys()].some(x => x.toLowerCase() === sleutel)) specs.set(k, v);
   };
