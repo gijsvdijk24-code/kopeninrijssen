@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Winkelmandje – Kopen in Rijssen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="kop"></div>
+
+<main class="wrap mandje-pagina" id="inhoud"></main>
+
+<div id="voet"></div>
+
+<script src="shop.js"></script>
+<script>
+const main = document.getElementById('inhoud');
+let producten = [];
+
+function regels() {
+  return Mandje.lees().map((r, index) => {
+    const p = producten.find(x => x.id === r.id);
+    if (!p) return null;
+    const prijs = prijsVan(p, r.variant);
+    return { index, p, variant: r.variant, aantal: r.aantal, prijs, totaal: (prijs || 0) * r.aantal };
+  }).filter(Boolean);
+}
+
+function render() {
+  const lijst = regels();
+  if (!lijst.length) {
+    main.innerHTML = `<h1 class="display">Winkelmandje</h1>
+      <div class="leeg-mandje"><h2 class="display" style="margin:0">Je mandje is nog leeg</h2>
+      <p style="margin:0;color:var(--grijs)">Ontdek producten van de winkels uit Rijssen.</p>
+      <a class="btn btn-groen" href="./#producten">Begin met shoppen</a></div>`;
+    return;
+  }
+  const subtotaal = lijst.reduce((s, r) => s + r.totaal, 0);
+  const bezorg = WINKEL_CONFIG.bezorgkosten;
+
+  main.innerHTML = `
+  <h1 class="display">Winkelmandje</h1>
+  <div class="mandje-rij">
+    <div class="mandje-items">
+      ${lijst.map(r => `
+      <div class="regel">
+        ${isUrl(r.p.afbeelding) ? `<img src="${esc(r.p.afbeelding)}" alt="">` : '<span class="geen"></span>'}
+        <div class="info">
+          <a href="product.html?id=${encodeURIComponent(r.p.id)}">${esc(r.p.naam)}</a>
+          <small>${r.variant ? esc(r.variant) + ' · ' : ''}${esc(r.p.winkel)} · ${euro(r.prijs)} per stuk</small>
+        </div>
+        <div class="stepper">
+          <button type="button" data-min="${r.index}" aria-label="Eén minder">−</button>
+          <input type="number" min="0" max="99" value="${r.aantal}" data-aantal="${r.index}" aria-label="Aantal">
+          <button type="button" data-plus="${r.index}" aria-label="Eén meer">+</button>
+        </div>
+        <div class="bedrag">${euro(r.totaal)}</div>
+        <button type="button" class="weg" data-weg="${r.index}" aria-label="Verwijderen">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+        </button>
+      </div>`).join('')}
+
+      <section class="kaart-wit" style="background:var(--wit);border-radius:24px;padding:28px;margin-top:12px">
+        <h2 class="display" style="margin:0 0 18px;font-size:26px">Je gegevens</h2>
+        <form id="bestelForm" class="formulier" novalidate>
+          <div class="breed keuze" role="radiogroup" aria-label="Bezorgen of afhalen">
+            <label><input type="radio" name="levering" value="Bezorgen" checked> Bezorgen</label>
+            <label><input type="radio" name="levering" value="Afhalen in de winkel"> Afhalen in de winkel</label>
+          </div>
+          <div><label for="voornaam">Voornaam *</label><input id="voornaam" name="voornaam" required autocomplete="given-name"></div>
+          <div><label for="achternaam">Achternaam *</label><input id="achternaam" name="achternaam" required autocomplete="family-name"></div>
+          <div><label for="email">E-mailadres *</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+          <div><label for="telefoon">Telefoonnummer *</label><input id="telefoon" name="telefoon" type="tel" required autocomplete="tel"></div>
+          <div class="adres"><label for="postcode">Postcode *</label><input id="postcode" name="postcode" required autocomplete="postal-code"></div>
+          <div class="adres"><label for="huisnummer">Huisnummer *</label><input id="huisnummer" name="huisnummer" required></div>
+          <div class="breed adres"><label for="straat">Straat en woonplaats *</label><input id="straat" name="straat" required autocomplete="street-address"></div>
+          <div class="breed"><label for="opmerking">Opmerking (optioneel)</label><textarea id="opmerking" name="opmerking"></textarea></div>
+        </form>
+      </section>
+    </div>
+
+    <aside class="overzicht" aria-label="Overzicht">
+      <h2 class="display">Overzicht</h2>
+      <div class="lijn"><span>Subtotaal</span><span>${euro(subtotaal)}</span></div>
+      <div class="lijn"><span>Bezorgen</span><span id="bezorgRegel">${bezorg == null ? 'volgt' : euro(bezorg)}</span></div>
+      <div class="lijn totaal"><span>Totaal</span><span id="totaalRegel">${euro(subtotaal + (bezorg || 0))}</span></div>
+      <button type="submit" form="bestelForm" class="btn btn-groen" id="bestelKnop">Bestelling plaatsen</button>
+      <p class="klein">Je ontvangt binnen één werkdag een bevestiging met een betaalverzoek via iDEAL. Pas na betaling regelen we je bestelling met de winkel.</p>
+      <p class="klein" id="fout" role="alert" style="color:#B42318;font-weight:600"></p>
+    </aside>
+  </div>`;
+
+  // Bezorgen of afhalen
+  const levering = () => main.querySelector('input[name="levering"]:checked').value;
+  const pasLeveringAan = () => {
+    const afhalen = levering() !== 'Bezorgen';
+    main.querySelectorAll('.adres').forEach(el => { el.hidden = afhalen; el.querySelector('input').required = !afhalen; });
+    const kosten = afhalen ? 0 : bezorg;
+    document.getElementById('bezorgRegel').textContent = afhalen ? 'gratis' : (bezorg == null ? 'volgt' : euro(bezorg));
+    document.getElementById('totaalRegel').textContent = euro(subtotaal + (kosten || 0));
+  };
+  main.querySelectorAll('input[name="levering"]').forEach(i => i.addEventListener('change', pasLeveringAan));
+  pasLeveringAan();
+
+  document.getElementById('bestelForm').addEventListener('submit', e => { e.preventDefault(); bestel(lijst, subtotaal, levering()); });
+}
+
+main.addEventListener('click', e => {
+  const t = e.target.closest('[data-min],[data-plus],[data-weg]');
+  if (!t) return;
+  const m = Mandje.lees();
+  if (t.dataset.weg !== undefined) Mandje.zet(+t.dataset.weg, 0);
+  else if (t.dataset.min !== undefined) Mandje.zet(+t.dataset.min, m[+t.dataset.min].aantal - 1);
+  else Mandje.zet(+t.dataset.plus, m[+t.dataset.plus].aantal + 1);
+  render();
+});
+main.addEventListener('change', e => {
+  if (e.target.dataset.aantal !== undefined) { Mandje.zet(+e.target.dataset.aantal, parseInt(e.target.value, 10) || 0); render(); }
+});
+
+function ordernummer() {
+  const d = new Date();
+  const dt = `${String(d.getFullYear()).slice(2)}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+  return `KIR-${dt}-${Math.random().toString(36).slice(2, 6).toUpperCase()}`;
+}
+
+async function bestel(lijst, subtotaal, levering) {
+  const form = document.getElementById('bestelForm');
+  const fout = document.getElementById('fout');
+  fout.textContent = '';
+  if (!form.checkValidity()) { form.reportValidity(); fout.textContent = 'Vul alle verplichte velden in.'; return; }
+
+  const v = Object.fromEntries(new FormData(form));
+  const nr = ordernummer();
+  const afhalen = levering !== 'Bezorgen';
+  const bezorg = afhalen ? 0 : WINKEL_CONFIG.bezorgkosten;
+
+  // Overzicht voor jou: per product de winkel en de link, zodat je weet waar je het moet halen en declareren
+  const productregels = lijst.map(r =>
+    `${r.aantal}x ${r.p.naam}${r.variant ? ' (' + r.variant + ')' : ''} – ${euro(r.prijs)} p/st = ${euro(r.totaal)}\n   Winkel: ${r.p.winkel}${r.p.link ? '\n   Link: ' + r.p.link : ''}`
+  ).join('\n\n');
+  const tekst =
+`Nieuwe bestelling ${nr}
+
+KLANT
+${v.voornaam} ${v.achternaam}
+${v.email} · ${v.telefoon}
+${afhalen ? 'Afhalen in de winkel' : `Bezorgen: ${v.straat}, ${v.postcode} nr. ${v.huisnummer}`}
+${v.opmerking ? 'Opmerking: ' + v.opmerking : ''}
+
+PRODUCTEN
+${productregels}
+
+Subtotaal: ${euro(subtotaal)}
+Bezorgen: ${afhalen ? 'gratis (afhalen)' : (bezorg == null ? 'nog bepalen' : euro(bezorg))}
+Totaal: ${euro(subtotaal + (bezorg || 0))}`;
+
+  const knop = document.getElementById('bestelKnop');
+  knop.disabled = true; knop.textContent = 'Bezig met versturen…';
+
+  try {
+    if (WINKEL_CONFIG.bestelFormulier) {
+      const r = await fetch(WINKEL_CONFIG.bestelFormulier, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ _subject: `Bestelling ${nr}`, ordernummer: nr, email: v.email, naam: `${v.voornaam} ${v.achternaam}`, bestelling: tekst })
+      });
+      if (!r.ok) throw new Error('verzenden');
+    } else if (WINKEL_CONFIG.bestelEmail) {
+      location.href = `mailto:${WINKEL_CONFIG.bestelEmail}?subject=${encodeURIComponent('Bestelling ' + nr)}&body=${encodeURIComponent(tekst)}`;
+    } else {
+      throw new Error('niet-ingesteld');
+    }
+    Mandje.leeg();
+    main.innerHTML = `
+      <div class="bevestiging">
+        <div class="vink"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#13532E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></div>
+        <h1 class="display" style="margin:0">Bedankt voor je bestelling!</h1>
+        <p style="margin:0">Je ordernummer is <b>${esc(nr)}</b>.</p>
+        <p style="margin:0;color:var(--grijs)">We sturen je binnen één werkdag een bevestiging met een betaalverzoek naar <b>${esc(v.email)}</b>.</p>
+        <a class="btn btn-groen" href="./">Verder winkelen</a>
+      </div>`;
+    window.scrollTo(0, 0);
+  } catch (err) {
+    fout.textContent = err.message === 'niet-ingesteld'
+      ? 'Online bestellen is binnenkort mogelijk. Neem tot die tijd contact met ons op.'
+      : 'Het versturen is niet gelukt. Probeer het opnieuw of neem contact met ons op.';
+    knop.disabled = false; knop.textContent = 'Bestelling plaatsen';
+  }
+}
+
+(async () => { producten = await laadProducten(); render(); })();
+</script>
+</body>
+</html>

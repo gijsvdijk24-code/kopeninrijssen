@@ -92,7 +92,7 @@ details.kaart form{margin-top:20px}
     <!-- Snel toevoegen met alleen een link -->
     <section class="kaart snel">
       <h1 class="display">Product toevoegen</h1>
-      <p class="uitleg">Plak de link van een product bij een winkel uit Rijssen. Naam, prijs, foto, omschrijving en winkel worden automatisch opgehaald.</p>
+      <p class="uitleg">Plak de link van een product bij een winkel uit Rijssen. Naam, prijs, foto's, omschrijving, specificaties en uitvoeringen worden automatisch opgehaald. De link zelf zien klanten niet.</p>
       <form id="linkForm" class="snel-rij">
         <label for="snelLink" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">Link naar product</label>
         <input id="snelLink" type="url" required placeholder="https://www.winkel.nl/product/…">
@@ -118,11 +118,14 @@ details.kaart form{margin-top:20px}
             <select id="categorie">
               <option value="">Kies…</option>
               <option>Eten &amp; drinken</option><option>Mode</option><option>Wonen &amp; cadeaus</option>
-              <option>Bloemen &amp; planten</option><option>Boeken &amp; hobby</option><option>Sport &amp; vrije tijd</option>
+              <option>Bloemen &amp; planten</option><option>Boeken &amp; hobby</option><option>Sport &amp; vrije tijd</option><option>Klussen &amp; tuin</option>
             </select></div>
           <div class="breed"><label for="link">Link naar product bij de winkel *</label><input id="link" type="url" required placeholder="https://"></div>
           <div class="breed"><label for="afbeelding">Link naar afbeelding</label><input id="afbeelding" type="url" placeholder="https://…jpg"><img id="voorbeeld" class="voorbeeld" alt="Voorbeeld van de afbeelding"></div>
-          <div class="breed"><label for="omschrijving">Korte omschrijving</label><textarea id="omschrijving"></textarea></div>
+          <div class="breed"><label for="afbeeldingen">Extra foto's (één link per regel)</label><textarea id="afbeeldingen" placeholder="https://…jpg"></textarea></div>
+          <div class="breed"><label for="omschrijving">Omschrijving</label><textarea id="omschrijving" style="height:200px"></textarea></div>
+          <div class="breed"><label for="specificaties">Specificaties (per regel: Naam: waarde)</label><textarea id="specificaties" style="height:140px" placeholder="Materiaal: keramiek&#10;Afmeting: 60 x 60 cm"></textarea></div>
+          <div class="breed"><label for="varianten">Uitvoeringen met prijs (per regel: Naam: prijs) – leeg laten als er maar één is</label><textarea id="varianten" placeholder="Per m2: 39,00&#10;Per doos: 55,50"></textarea></div>
           <div class="breed"><label class="check"><input type="checkbox" id="zichtbaar" checked> Zichtbaar op de website</label></div>
         </div>
         <div class="knoppen">
@@ -214,7 +217,9 @@ function toonLijst() {
       </div>
       <div class="acties">
         ${fout ? `<button class="btn btn-geel" type="button" data-opnieuw="${esc(p.id)}">Opnieuw proberen</button>` : ''}
+        ${!bezig && !fout ? `<a class="btn btn-licht" href="product.html?id=${encodeURIComponent(p.id)}" target="_blank">Bekijk</a>` : ''}
         ${bezig ? '' : `<button class="btn btn-licht" type="button" data-bewerk="${esc(p.id)}">Bewerken</button>`}
+        ${!bezig && !fout ? `<button class="btn btn-licht" type="button" data-ververs="${esc(p.id)}" title="Haalt alles opnieuw op van de winkelpagina">Opnieuw ophalen</button>` : ''}
         <button class="btn btn-rood" type="button" data-verwijder="${esc(p.id)}">Verwijderen</button>
       </div>
     </div>`;
@@ -244,6 +249,9 @@ function vulFormulier(p) {
   $('id').value = p.id; $('naam').value = p.naam || ''; $('winkel').value = p.winkel || '';
   $('prijs').value = p.prijs ?? ''; $('categorie').value = p.categorie || ''; $('link').value = p.link || '';
   $('afbeelding').value = p.afbeelding || ''; $('omschrijving').value = p.omschrijving || '';
+  $('afbeeldingen').value = (p.afbeeldingen || []).filter(u => u !== p.afbeelding).join('\n');
+  $('specificaties').value = (p.specificaties || []).map(s => `${s.naam}: ${s.waarde}`).join('\n');
+  $('varianten').value = (p.varianten || []).map(v => `${v.naam}: ${v.prijs != null ? String(v.prijs).replace('.', ',') : ''}`).join('\n');
   $('zichtbaar').checked = p.zichtbaar !== false;
   $('formTitel').textContent = 'Product bewerken'; $('handmatig').open = true;
   toonVoorbeeld(); $('handmatig').scrollIntoView({ behavior: 'smooth' });
@@ -317,6 +325,11 @@ $('productForm').addEventListener('submit', async e => {
     afbeelding: $('afbeelding').value.trim(), omschrijving: $('omschrijving').value.trim(),
     zichtbaar: $('zichtbaar').checked, status: 'klaar'
   };
+  const extra = $('afbeeldingen').value.split('\n').map(s => s.trim()).filter(s => /^https?:\/\//i.test(s));
+  p.afbeeldingen = [p.afbeelding, ...extra].filter(Boolean).filter((u, i, a) => a.indexOf(u) === i);
+  p.specificaties = $('specificaties').value.split('\n').map(r => { const i = r.indexOf(':'); return i > 0 ? { naam: r.slice(0, i).trim(), waarde: r.slice(i + 1).trim() } : null; }).filter(s => s && s.naam && s.waarde);
+  p.varianten = $('varianten').value.split('\n').map(r => { const i = r.lastIndexOf(':'); if (i <= 0) return null; const n = parseFloat(r.slice(i + 1).replace(/\./g, '').replace(',', '.')); return { naam: r.slice(0, i).trim(), prijs: isNaN(n) ? null : n }; }).filter(v => v && v.naam);
+
   const bestaand = producten.some(x => x.id === p.id);
   try {
     await wijzig((bestaand ? 'Product bijgewerkt: ' : 'Product toegevoegd: ') + p.naam, lijst => {
@@ -335,6 +348,16 @@ $('lijst').addEventListener('click', async e => {
   const bewerk = e.target.closest('[data-bewerk]');
   const weg = e.target.closest('[data-verwijder]');
   const opnieuw = e.target.closest('[data-opnieuw]');
+  const ververs = e.target.closest('[data-ververs]');
+  if (ververs) {
+    const id = ververs.dataset.ververs;
+    if (!confirm('Alle gegevens opnieuw ophalen van de winkelpagina? Je eigen aanpassingen worden dan overschreven.')) return;
+    try {
+      await wijzig('Opnieuw ophalen', lijst => { const p = lijst.find(x => x.id === id); if (p) { p.status = 'ophalen'; p.overschrijf = true; delete p.fout; } return lijst; });
+      toonLijst(); startPolling();
+    } catch (err) { melding(err.message, 'fout'); }
+    return;
+  }
   if (bewerk) { const p = producten.find(x => x.id === bewerk.dataset.bewerk); if (p) vulFormulier(p); return; }
   if (opnieuw) {
     const id = opnieuw.dataset.opnieuw;

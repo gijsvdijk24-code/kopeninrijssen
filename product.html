@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product – Kopen in Rijssen</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="kop"></div>
+
+<main id="inhoud" class="wrap">
+  <div class="niet-gevonden">Product laden…</div>
+</main>
+
+<div id="voet"></div>
+
+<script src="shop.js"></script>
+<script>
+const VINK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1F4D3A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+
+(async () => {
+  const id = new URLSearchParams(location.search).get('id');
+  const producten = await laadProducten();
+  const p = producten.find(x => x.id === id);
+  const main = document.getElementById('inhoud');
+
+  if (!p) {
+    main.innerHTML = `<div class="niet-gevonden"><h1 class="display">Product niet gevonden</h1><p>Misschien is het uitverkocht of verplaatst.</p><a class="btn btn-groen" href="./#producten">Bekijk alle producten</a></div>`;
+    return;
+  }
+
+  document.title = `${p.naam} – Kopen in Rijssen`;
+  const fotos = (p.afbeeldingen && p.afbeeldingen.length ? p.afbeeldingen : [p.afbeelding]).filter(isUrl);
+  const varianten = (p.varianten || []).filter(v => v.naam);
+  const specs = (p.specificaties || []).filter(s => s.naam && s.waarde);
+
+  main.innerHTML = `
+  <nav class="kruimel" aria-label="Kruimelpad">
+    <a href="./">Home</a> ›
+    ${p.categorie ? `<a href="./?categorie=${encodeURIComponent(p.categorie)}#producten">${esc(p.categorie)}</a> ›` : ''}
+    <span>${esc(p.naam)}</span>
+  </nav>
+
+  <section class="product">
+    <div class="product-rij">
+      <div class="galerij">
+        <div class="hoofdfoto" id="hoofdfoto">
+          ${fotos.length ? `<img src="${esc(fotos[0])}" alt="${esc(p.naam)}">` : '<span class="ph">[FOTO PRODUCT]</span>'}
+        </div>
+        ${fotos.length > 1 ? `<div class="duimen" role="list">
+          ${fotos.map((f, i) => `<button type="button" role="listitem" data-foto="${i}" aria-label="Foto ${i + 1}" aria-current="${i === 0}"><img src="${esc(f)}" alt="" loading="lazy"></button>`).join('')}
+        </div>` : ''}
+      </div>
+
+      <div class="koop">
+        <div class="winkelnaam">${esc(p.winkel)} · uit Rijssen</div>
+        <h1 class="display">${esc(p.naam)}</h1>
+        <div class="prijs-groot" id="prijs">${euro(prijsVan(p, varianten[0]?.naam))}</div>
+
+        ${varianten.length ? `<div>
+          <label for="variant">Kies een uitvoering</label>
+          <select id="variant">${varianten.map(v => `<option value="${esc(v.naam)}">${esc(v.naam)}${v.prijs != null ? ' – ' + euro(v.prijs) : ''}</option>`).join('')}</select>
+        </div>` : ''}
+
+        <div class="aantal-rij">
+          <div class="stepper">
+            <button type="button" id="min" aria-label="Eén minder">−</button>
+            <input id="aantal" type="number" min="1" max="99" value="1" aria-label="Aantal">
+            <button type="button" id="plus" aria-label="Eén meer">+</button>
+          </div>
+          <button type="button" class="btn btn-groen" id="koopKnop">In winkelmandje</button>
+        </div>
+
+        <div class="zekerheden">
+          <div>${VINK}<span>Bezorgd in Rijssen en omgeving of gratis afhalen</span></div>
+          <div>${VINK}<span>Veilig betalen na bevestiging van je bestelling</span></div>
+          <div>${VINK}<span>Je steunt ${esc(p.winkel)} en andere winkels in Rijssen</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="info-blok">
+    ${p.omschrijving ? `<section><h2 class="display">Omschrijving</h2><div class="omschrijving">${esc(p.omschrijving)}</div></section>` : ''}
+    ${specs.length ? `<section><h2 class="display">Specificaties</h2>
+      <table class="specs"><tbody>${specs.map(s => `<tr><th scope="row">${esc(s.naam)}</th><td>${esc(s.waarde)}</td></tr>`).join('')}</tbody></table>
+    </section>` : ''}
+  </div>`;
+
+  // Foto's wisselen
+  main.querySelectorAll('[data-foto]').forEach(b => b.addEventListener('click', () => {
+    const i = +b.dataset.foto;
+    document.querySelector('#hoofdfoto img').src = fotos[i];
+    main.querySelectorAll('[data-foto]').forEach(x => x.setAttribute('aria-current', x === b));
+  }));
+
+  // Uitvoering en aantal
+  const variantVeld = document.getElementById('variant');
+  if (variantVeld) variantVeld.addEventListener('change', () => { document.getElementById('prijs').textContent = euro(prijsVan(p, variantVeld.value)); });
+  const aantal = document.getElementById('aantal');
+  const zet = n => { aantal.value = Math.max(1, Math.min(99, n || 1)); };
+  document.getElementById('min').addEventListener('click', () => zet(+aantal.value - 1));
+  document.getElementById('plus').addEventListener('click', () => zet(+aantal.value + 1));
+  aantal.addEventListener('change', () => zet(+aantal.value));
+
+  document.getElementById('koopKnop').addEventListener('click', () => {
+    inMandje(p.id, variantVeld ? variantVeld.value : '', +aantal.value, p.naam);
+  });
+})();
+</script>
+</body>
+</html>
