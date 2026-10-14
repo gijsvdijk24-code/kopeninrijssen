@@ -53,16 +53,22 @@ async function haal(url) {
   const titel = decode((html.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1] || '');
   const absoluut = u => { try { return new URL(u, basis).href; } catch { return ''; } };
 
-  const siteNaam = m['og:site_name']?.[0] || verkoper(product) || hostNaam(basis);
+  const siteNaam = m['og:site_name']?.[0] || verkoper(product) || winkelUitTitel(titel, basis) || hostNaam(basis);
 
   // Shopify-winkels geven via /products/<naam>.json alle details (volledige tekst, alle foto's, maten)
   const shopify = await haalShopify(basis);
 
   let naam = schoon(shopify?.title || product?.name || m['og:title']?.[0] || m['twitter:title']?.[0] || titel);
-  naam = zonderWinkelnaam(naam, siteNaam);
+  naam = netteNaam(zonderWinkelnaam(naam, siteNaam), siteNaam);
 
-  const omschrijvingHtml = shopify?.body_html || product?.description || m['og:description']?.[0] || m['description']?.[0] || '';
-  const omschrijving = naarTekst(omschrijvingHtml).slice(0, 4000);
+  // Omschrijving: liefst de echte producttekst, niet de korte SEO-zin uit de meta-tags
+  const blokHtml = omschrijvingBlok(html);
+  const kandidaten = [shopify?.body_html, product?.description, blokHtml, m['og:description']?.[0], m['description']?.[0]]
+    .filter(Boolean).map(h => ({ html: h, tekst: naarTekst(h) })).filter(k => k.tekst.length > 0);
+  const goed = kandidaten.filter(k => !isSeoZin(k.tekst, naam));
+  const gekozen = goed.sort((a, b) => b.tekst.length - a.tekst.length)[0] || null;
+  const omschrijvingHtml = gekozen?.html || '';
+  const omschrijving = (gekozen?.tekst || '').slice(0, 4000);
 
   // Foto's
   const fotos = [];
@@ -72,6 +78,7 @@ async function haal(url) {
   (m['og:image'] || []).forEach(voegToe);
   (m['og:image:url'] || []).forEach(voegToe);
   (m['twitter:image'] || []).forEach(voegToe);
+  galerijFotos(html, fotos[0], absoluut).forEach(voegToe);
 
   // Varianten (bijv. maten of kleuren met eigen prijs)
   let varianten = [];
@@ -83,6 +90,7 @@ async function haal(url) {
   } else {
     varianten = variantenUitProduct(product);
   }
+  varianten = netteVarianten(varianten);
 
   const prijzen = varianten.map(v => v.prijs).filter(x => x != null);
   const prijs = getal(shopify?.variants?.[0]?.price)
@@ -115,6 +123,8 @@ async function haal(url) {
   }
   specsUitHtml(omschrijvingHtml).forEach(([k, v]) => zet(k, v));
   specsUitPagina(html).forEach(([k, v]) => zet(k, v));
+  // De "maat" van de getoonde pagina is geen vaste eigenschap als er meerdere maten zijn
+  if (varianten.length) for (const k of [...specs.keys()]) if (/^(maat|size)$/i.test(k)) specs.delete(k);
   const specificaties = [...specs].slice(0, 30).map(([naam, waarde]) => ({ naam, waarde }));
 
   return {
@@ -124,7 +134,7 @@ async function haal(url) {
     afbeelding: fotos[0] || '',
     afbeeldingen: fotos.slice(0, 12),
     winkel: schoon(siteNaam),
-    categorie: raadCategorie(`${naam} ${shopify?.product_type || ''} ${omschrijving.slice(0, 600)}`),
+    categorie: raadCategorie(`${naam} ${shopify?.product_type || ''} ${specificaties.map(x => x.waarde).join(' ')} ${omschrijving.slice(0, 600)}`, basis),
     specificaties,
     varianten
   };
@@ -281,17 +291,130 @@ function hostNaam(url) {
   } catch { return ''; }
 }
 
-function raadCategorie(tekst) {
+function raadCategorie(tekst, url = '') {
   const t = ' ' + tekst.toLowerCase() + ' ';
   const regels = [
     ['Klussen & tuin', /\b(tegel|tegels|vloertegel|wandtegel|bestrating|vloer|laminaat|parket|gereedschap|boor|zaag|schroef|verf|tuinset|schutting|grind|terras|keramisch)/],
     ['Eten & drinken', /\b(brood|krentenwegge|wegge|koek|taart|kaas|worst|vlees|wijn|bier|koffie|thee|chocola|snoep|gebak|banket|honing|jam|saus)/],
     ['Bloemen & planten', /\b(bloem|boeket|kamerplant|plant |planten|tulp|roos|rozen|orchidee)/],
-    ['Mode', /\b(jas|jassen|jurk|broek|shirt|t-shirt|trui|blouse|schoen|sneaker|sokken|handtas|riem|sjaal|kleding|horloge|sieraad|ketting|armband)/],
+    ['Mode', /\b(jas|jassen|jack|jacket|puffer|jurk|broek|jeans|denim|shirt|t-shirt|trui|truien|pullover|vest|blouse|muts|cap|pet|schoen|sneaker|sokken|handtas|riem|sjaal|kleding|horloge|sieraad|ketting|armband|oorbel|lingerie|ondergoed|pyjama)/],
     ['Boeken & hobby', /\b(boek|roman|puzzel|bordspel|knutsel|wol|garen|hobby|tekenset)/],
     ['Sport & vrije tijd', /\b(fiets|sport|voetbal|hardloop|fitness|kamperen|wandelschoen|zwem|tennis)/],
     ['Wonen & cadeaus', /\b(kaars|vaas|kussen|plaid|lamp|servies|mok|decoratie|cadeau|interieur|geurstok)/]
   ];
   for (const [cat, re] of regels) if (re.test(t)) return cat;
+  let host = ''; try { host = new URL(url).hostname; } catch {}
+  if (/mode|kleding|fashion|schoen|jeans|juwelier/.test(host)) return 'Mode';
+  if (/bloem/.test(host)) return 'Bloemen & planten';
+  if (/boek|hobby/.test(host)) return 'Boeken & hobby';
   return '';
+}
+
+// ---------- opschonen ----------
+
+// Winkelnaam uit de paginatitel, bijv. "... | Hans voortman" -> "Hans Voortman"
+function winkelUitTitel(titel, url) {
+  const host = (() => { try { return new URL(url).hostname.replace(/^www\./, '').split('.')[0].toLowerCase(); } catch { return ''; } })();
+  const delen = String(titel).split(/\s+[|–—-]\s+/);
+  for (const d of delen.slice(1).reverse()) {
+    const kaal = d.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (kaal && host && (host.includes(kaal) || kaal.includes(host))) return hoofdletters(d.trim());
+  }
+  return '';
+}
+
+function hoofdletters(s) {
+  return s.split(' ').map(w => w.length > 2 || /^[a-z]/i.test(w) ? w.charAt(0).toUpperCase() + w.slice(1) : w).join(' ');
+}
+
+// Haalt "kopen", winkelnaam en schreeuwende hoofdletters uit een productnaam
+function netteNaam(naam, site) {
+  const kaal = x => x.toLowerCase().replace(/[^a-z0-9]/g, '');
+  let n = naam.split(/\s+[|–—]\s+/).filter(d => !site || kaal(d) !== kaal(site)).join(' – ');
+  n = n.replace(/\s+(online\s+)?(kopen|bestellen)(\s+bij\s+.+)?$/i, '').replace(/^(koop|bestel)\s+/i, '').trim();
+  if (n.length > 3 && n === n.toUpperCase() && /[A-Z]/.test(n)) {
+    n = n.toLowerCase().replace(/(^|\s)([a-zà-ÿ])/g, (_, a, b) => a + b.toUpperCase());
+  }
+  return n;
+}
+
+// Herkent SEO-zinnetjes als "... gemakkelijk en veilig online kopen bij X"
+function isSeoZin(tekst, naam) {
+  const t = tekst.toLowerCase();
+  if (tekst.length < 200 && /(online|veilig|snel|voordelig)?\s*(kopen|bestellen|bestel)\s+(bij|op|via)\b/.test(t)) return true;
+  if (tekst.length < 60) {
+    const kaal = x => x.toLowerCase().replace(/[^a-z0-9]/g, '');
+    if (kaal(naam) && kaal(tekst).startsWith(kaal(naam).slice(0, 12))) return true; // alleen de productcode/naam herhaald
+  }
+  return false;
+}
+
+// Zoekt een blok als <div class="product-description"> en geeft de inhoud
+function omschrijvingBlok(html) {
+  const re = /<(div|section|article)\b[^>]*(?:class|id)=["'][^"']*(product[-_]?description|productdescription|product[-_]?omschrijving|omschrijving|beschrijving|description[-_]?content|tab[-_]?description)[^"']*["'][^>]*>/gi;
+  let m, beste = '';
+  while ((m = re.exec(html))) {
+    const inhoud = binnenTag(html, m.index, m[1]);
+    if (inhoud && naarTekst(inhoud).length > naarTekst(beste).length) beste = inhoud;
+  }
+  return naarTekst(beste).length >= 40 ? beste : '';
+}
+
+// Geeft de inhoud van een element vanaf positie start, rekening houdend met geneste tags
+function binnenTag(html, start, tag) {
+  const open = new RegExp(`<${tag}\\b`, 'gi'), dicht = new RegExp(`</${tag}>`, 'gi');
+  const begin = html.indexOf('>', start) + 1;
+  let diepte = 1, pos = begin;
+  while (diepte > 0 && pos < html.length && pos - begin < 60000) {
+    open.lastIndex = pos; dicht.lastIndex = pos;
+    const o = open.exec(html), d = dicht.exec(html);
+    if (!d) return '';
+    if (o && o.index < d.index) { diepte++; pos = o.index + 1; }
+    else { diepte--; pos = d.index + d[0].length; if (diepte === 0) return html.slice(begin, d.index); }
+  }
+  return '';
+}
+
+// Zoekt andere foto's van hetzelfde product, bijv. 140004221_1.jpg -> 140004221_2.jpg
+function galerijFotos(html, hoofd, absoluut) {
+  if (!hoofd) return [];
+  let pad;
+  try { pad = new URL(hoofd).pathname; } catch { return []; }
+  const bestand = pad.split('/').pop().replace(/\.[a-z]+$/i, '');
+  const stam = bestand.replace(/[-_](\d{1,2}|front|back|detail|main|large|zoom)$/i, '');
+  if (stam.length < 5) return [];
+  const uit = [];
+  const re = /(?:src|data-src|data-zoom-image|data-large|href|srcset)=["']([^"'\s]+\.(?:jpe?g|png|webp)[^"'\s]*)/gi;
+  let m;
+  while ((m = re.exec(html))) {
+    const u = absoluut(m[1]);
+    if (!u) continue;
+    const naam = (() => { try { return new URL(u).pathname.split('/').pop(); } catch { return ''; } })();
+    if (naam.startsWith(stam) && !/thumb|small|mini|_xs|icon/i.test(u)) uit.push(u);
+  }
+  return [...new Set(uit)].slice(0, 12);
+}
+
+// Houdt alleen echte maten/uitvoeringen over en zet ze in een logische volgorde
+function netteVarianten(lijst) {
+  const gezien = new Set();
+  const uit = [];
+  for (const v of lijst || []) {
+    let naam = schoon(v.naam).replace(/^maat\s+/i, '');
+    if (!naam || naam.length > 25 || /kopen|bestellen|\|/i.test(naam)) continue;
+    const sleutel = naam.toLowerCase();
+    if (gezien.has(sleutel)) continue;
+    gezien.add(sleutel);
+    uit.push({ naam, prijs: v.prijs });
+  }
+  const volgorde = ['xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl', '2xl', '3xl', 'xxxl', '4xl', '5xl'];
+  const rang = n => {
+    const k = n.toLowerCase();
+    const i = volgorde.indexOf(k);
+    if (i >= 0) return i;
+    const getal = parseFloat(k);
+    return isNaN(getal) ? 1000 : 100 + getal;
+  };
+  if (uit.every(v => rang(v.naam) < 1000)) uit.sort((a, b) => rang(a.naam) - rang(b.naam));
+  return uit.length > 1 ? uit : [];
 }

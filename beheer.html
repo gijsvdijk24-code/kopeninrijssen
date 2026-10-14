@@ -334,7 +334,7 @@ $('productForm').addEventListener('submit', async e => {
   try {
     await wijzig((bestaand ? 'Product bijgewerkt: ' : 'Product toegevoegd: ') + p.naam, lijst => {
       const i = lijst.findIndex(x => x.id === p.id);
-      if (i >= 0) lijst[i] = p; else lijst.unshift(p);
+      if (i >= 0) lijst[i] = { ...lijst[i], ...p }; else lijst.unshift(p);
       return lijst;
     });
     melding('Opgeslagen! Over ongeveer een minuut staat het op de website.');
