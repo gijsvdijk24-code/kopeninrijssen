@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Productadvies – Thuiskompas</title>
+<meta name="description" content="Welke laadpaal, thuisbatterij, warmtepomp of zonnepanelen passen bij jou? Vergelijkingen en koopadvies in gewone taal.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div id="kop" data-actief="advies"></div>
+
+<main>
+  <section class="pagina-kop">
+    <div class="wrap">
+      <span class="label">Productadvies</span>
+      <h1>Welk product is het beste voor jou?</h1>
+      <p>Er zijn tientallen merken laadpalen, thuisbatterijen en warmtepompen. Wij zetten ze naast elkaar en leggen in gewone taal uit wat bij jouw situatie past.</p>
+    </div>
+  </section>
+
+  <div class="wrap" id="gidsenLijst" style="padding-bottom:96px;display:flex;flex-direction:column;gap:56px"></div>
+</main>
+
+<div id="voet"></div>
+
+<script src="site.js"></script>
+<script>
+// Status: 'binnenkort' of een link naar de gids (bijv. 'advies/beste-laadpaal.html')
+const GIDSEN = [
+  { id: 'laadpaal', onderwerp: 'Laadpalen', gidsen: [
+    { titel: 'De beste laadpaal van 2026', tekst: 'Merken vergeleken op prijs, slim laden en app.' },
+    { titel: 'Laadpaal met of zonder kabel?', tekst: 'Wat is handiger en wat kost het?' },
+    { titel: 'Slim laden met dynamische stroomprijzen', tekst: 'Zo laad je je auto zo goedkoop mogelijk.' }
+  ] },
+  { id: 'thuisbatterij', onderwerp: 'Thuisbatterijen', gidsen: [
+    { titel: 'De beste thuisbatterij van 2026', tekst: 'Fabrikanten vergeleken op capaciteit, garantie en slimme software.' },
+    { titel: 'Is een thuisbatterij rendabel?', tekst: 'Een eerlijke rekensom voor jouw situatie.' },
+    { titel: 'Welke capaciteit heb ik nodig?', tekst: 'Van 5 tot 20 kWh: zo kies je de juiste maat.' }
+  ] },
+  { id: 'warmtepomp', onderwerp: 'Warmtepompen', gidsen: [
+    { titel: 'De beste warmtepomp van 2026', tekst: 'Hybride en volledig elektrisch, merk voor merk.' },
+    { titel: 'Hybride of all-electric?', tekst: 'Welke past bij jouw huis en isolatie?' },
+    { titel: 'Subsidie voor je warmtepomp', tekst: 'Zo vraag je de ISDE-subsidie aan.' }
+  ] },
+  { id: 'zonnepanelen', onderwerp: 'Zonnepanelen', gidsen: [
+    { titel: 'De beste zonnepanelen van 2026', tekst: 'Merken vergeleken op rendement en garantie.' },
+    { titel: 'Zonnepanelen na de salderingsregeling', tekst: 'Wat verandert er en loont het nog?' }
+  ] },
+  { id: 'airco', onderwerp: 'Airco', gidsen: [
+    { titel: 'De beste airco om mee te verwarmen', tekst: 'Split-units vergeleken op zuinigheid en geluid.' }
+  ] },
+  { id: 'cv-ketel', onderwerp: 'Cv-ketels', gidsen: [
+    { titel: 'Cv-ketel vervangen of overstappen?', tekst: 'Wanneer een nieuwe ketel nog slim is.' }
+  ] }
+];
+
+document.getElementById('gidsenLijst').innerHTML = GIDSEN.map(g => `
+  <section id="${g.id}" style="scroll-margin-top:96px">
+    <div class="sectie-kop" style="margin-bottom:20px">
+      <h2 style="font-size:clamp(28px,3vw,38px)">${g.onderwerp}</h2>
+      <a class="chip" href="installateur-vinden.html?klus=${g.id}">Installateur vinden →</a>
+    </div>
+    <div class="gidsen">
+      ${g.gidsen.map((x, n) => `
+        <div class="gids">
+          <span class="icoon" style="font-family:'Schibsted Grotesk',sans-serif;font-weight:800">${n + 1}</span>
+          <div><h3>${x.titel}</h3><p>${x.tekst}</p></div>
+          ${x.link ? `<a class="btn btn-inkt" href="${x.link}" style="height:44px">Lees de gids</a>` : '<span class="status">Binnenkort</span>'}
+        </div>`).join('')}
+    </div>
+  </section>`).join('');
+</script>
+</body>
+</html>

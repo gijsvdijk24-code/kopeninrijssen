@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Beheer installateurs – Thuiskompas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+<style>
+.kaart{background:var(--wit);border:1px solid var(--lijn);border-radius:20px;padding:28px;margin-bottom:20px;display:flex;flex-direction:column;gap:16px}
+.kaart h2{font-size:24px}
+.kaart p{margin:0;color:var(--grijs)}
+textarea.plak{width:100%;min-height:150px;padding:14px;border:1.5px solid #C9CED8;border-radius:12px;font:14px/1.5 ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+.melding{padding:12px 16px;border-radius:12px;font-weight:600;display:none}
+.melding.ok{display:block;background:var(--groen-zacht);color:#14533A}
+.melding.fout{display:block;background:#FBE1DE;color:#7A1A12}
+.rij{display:flex;flex-wrap:wrap;gap:14px;align-items:center;border:1px solid var(--lijn);border-radius:14px;padding:14px 16px}
+.rij .info{flex:1 1 260px;min-width:0}
+.rij b{display:block}
+.rij small{color:var(--grijs)}
+.rij .acties{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.rij .acties .btn{height:40px;padding:0 14px;font-size:14px}
+.rij label{display:flex;gap:6px;align-items:center;font-size:14px;color:var(--grijs)}
+.rij input[type=number]{width:70px;height:40px;border:1.5px solid #C9CED8;border-radius:10px;padding:0 8px;font:inherit}
+.lijst{display:flex;flex-direction:column;gap:10px}
+.voorbeeld{background:var(--vlak);border-radius:12px;padding:14px;font-size:14px}
+</style>
+</head>
+<body>
+<div id="kop"></div>
+
+<main class="wrap" style="padding:48px 24px 96px;max-width:960px">
+  <h1 style="font-size:40px;margin-bottom:24px">Beheer installateurs</h1>
+  <div id="melding" class="melding" role="status" style="margin-bottom:20px"></div>
+
+  <section id="login" class="kaart" hidden>
+    <h2>Inloggen</h2>
+    <p>Plak je GitHub-sleutel met schrijfrechten op <b>Contents</b>. Hij blijft alleen in deze browser bewaard.</p>
+    <form id="loginForm" class="velden" style="grid-template-columns:1fr auto;align-items:end">
+      <div><label for="token">GitHub-sleutel</label><input id="token" type="password" autocomplete="off" required placeholder="github_pat_…"></div>
+      <button class="btn btn-inkt" type="submit" style="height:48px">Inloggen</button>
+    </form>
+  </section>
+
+  <div id="beheer" hidden>
+    <section class="kaart">
+      <h2>Aanmelding goedkeuren</h2>
+      <p>Controleer eerst het KvK-nummer en de reviews van het bedrijf. Plak daarna het profiel uit de aanmeldmail (het veld <b>profiel_om_te_plakken</b>).</p>
+      <textarea class="plak" id="plak" placeholder='{"id":"…","naam":"…", …}' aria-label="Profiel uit de aanmeldmail"></textarea>
+      <div id="voorbeeld" class="voorbeeld" hidden></div>
+      <div><button class="btn btn-accent" id="toevoegen" disabled>Toevoegen aan Thuiskompas</button></div>
+    </section>
+
+    <section class="kaart">
+      <div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center">
+        <h2>Installateurs (<span id="aantal">0</span>)</h2>
+        <button class="btn btn-rand" id="demoWeg" style="height:40px;font-size:14px" hidden>Alle voorbeeldprofielen verwijderen</button>
+      </div>
+      <div class="lijst" id="lijst"></div>
+    </section>
+  </div>
+</main>
+
+<div id="voet"></div>
+
+<script src="site.js"></script>
+<script>
+const API = 'https://api.github.com/repos/gijsvdijk24-code/kopeninrijssen/contents/installateurs.json';
+const DIENSTEN = ['warmtepomp','zonnepanelen','thuisbatterij','cv-ketel','laadpaal','airco','elektra','sanitair'];
+const PROVINCIES = ['Heel Nederland','Groningen','Friesland','Drenthe','Overijssel','Flevoland','Gelderland','Utrecht','Noord-Holland','Zuid-Holland','Zeeland','Noord-Brabant','Limburg'];
+let token = ''; try { token = localStorage.getItem('kir_token') || ''; } catch (e) {}
+let lijst = [], sha = null, nieuw = null;
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const headers = () => ({ Authorization: 'Bearer ' + token, Accept: 'application/vnd.github+json' });
+const naar64 = s => { const b = new TextEncoder().encode(s); let x = ''; b.forEach(c => x += String.fromCharCode(c)); return btoa(x); };
+const van64 = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g, '')), c => c.charCodeAt(0)));
+function melding(t, soort = 'ok') { const m = $('melding'); m.textContent = t; m.className = 'melding ' + soort; }
+
+async function laden() {
+  const r = await fetch(API + '?ref=main&t=' + Date.now(), { headers: headers(), cache: 'no-store' });
+  if (r.status === 401 || r.status === 403) throw new Error('sleutel');
+  if (r.status === 404) { lijst = []; sha = null; return; }
+  if (!r.ok) throw new Error('GitHub gaf fout ' + r.status);
+  const d = await r.json(); sha = d.sha;
+  try { lijst = JSON.parse(van64(d.content)); } catch (e) { lijst = []; }
+}
+async function wijzig(bericht, fn) {
+  for (let poging = 0; poging < 3; poging++) {
+    if (poging) await laden();
+    const nieuweLijst = fn(JSON.parse(JSON.stringify(lijst)));
+    const body = { message: bericht, content: naar64(JSON.stringify(nieuweLijst, null, 2) + '\n'), branch: 'main' };
+    if (sha) body.sha = sha;
+    const r = await fetch(API, { method: 'PUT', headers: headers(), body: JSON.stringify(body) });
+    if (r.ok) { sha = (await r.json()).content.sha; lijst = nieuweLijst; return; }
+    if (r.status !== 409 && r.status !== 422) throw new Error('Opslaan mislukt (' + r.status + ').');
+  }
+  throw new Error('Opslaan lukte niet. Herlaad de pagina.');
+}
+
+function toonLijst() {
+  $('aantal').textContent = lijst.length;
+  $('demoWeg').hidden = !lijst.some(i => i.demo);
+  $('lijst').innerHTML = lijst.length ? lijst.map(i => `
+    <div class="rij">
+      <div class="info"><b>${esc(i.naam)}${i.demo ? ' <span class="badge demo">Voorbeeld</span>' : ''}</b>
+        <small>${esc(i.plaats)} · ${esc((i.diensten || []).join(', '))} · ${esc((i.provincies || []).join(', '))}</small></div>
+      <div class="acties">
+        <label>Score <input type="number" min="1" max="5" step="0.1" value="${i.beoordeling ?? ''}" data-score="${esc(i.id)}" placeholder="–" aria-label="Gecontroleerde reviewscore"></label>
+        <button class="btn btn-rand" data-weg="${esc(i.id)}">Verwijderen</button>
+      </div>
+    </div>`).join('') : '<p>Nog geen installateurs.</p>';
+}
+
+// Een geplakt profiel controleren
+function controleer(p) {
+  const fouten = [];
+  if (!p || typeof p !== 'object') return ['Dit is geen geldig profiel.'];
+  if (!p.id || !p.naam || !p.plaats) fouten.push('Naam, plaats of id ontbreekt.');
+  if (!Array.isArray(p.diensten) || !p.diensten.length || p.diensten.some(d => !DIENSTEN.includes(d))) fouten.push('Diensten kloppen niet.');
+  if (!Array.isArray(p.provincies) || !p.provincies.length || p.provincies.some(x => !PROVINCIES.includes(x))) fouten.push('Provincies kloppen niet.');
+  if (![1, 2, 3].includes(p.prijsniveau)) fouten.push('Prijsniveau moet 1, 2 of 3 zijn.');
+  if (lijst.some(i => i.id === p.id)) fouten.push('Deze installateur staat er al in.');
+  return fouten;
+}
+$('plak').addEventListener('input', () => {
+  nieuw = null; $('toevoegen').disabled = true;
+  const tekst = $('plak').value.trim();
+  if (!tekst) { $('voorbeeld').hidden = true; return; }
+  let p; try { p = JSON.parse(tekst); } catch (e) { $('voorbeeld').hidden = false; $('voorbeeld').innerHTML = 'Dit is geen geldige tekst. Kopieer het hele profiel, van <b>{</b> tot en met <b>}</b>.'; return; }
+  const fouten = controleer(p);
+  $('voorbeeld').hidden = false;
+  if (fouten.length) { $('voorbeeld').innerHTML = fouten.map(esc).join('<br>'); return; }
+  const schoon = {
+    id: String(p.id), naam: String(p.naam), plaats: String(p.plaats), provincies: p.provincies, diensten: p.diensten,
+    prijsniveau: p.prijsniveau, startBinnenWeken: +p.startBinnenWeken || 4, garantieJaren: +p.garantieJaren || 0,
+    beoordeling: null, keurmerk: !!p.keurmerk, subsidiehulp: !!p.subsidiehulp, lokaal: !!p.lokaal, zakelijk: !!p.zakelijk,
+    omschrijving: String(p.omschrijving || '').slice(0, 160), website: /^https?:\/\//.test(p.website || '') ? p.website : ''
+  };
+  nieuw = schoon;
+  $('voorbeeld').innerHTML = `<b>${esc(schoon.naam)}</b> uit ${esc(schoon.plaats)}<br>${esc(schoon.diensten.join(', '))}<br>${esc(schoon.provincies.join(', '))}`;
+  $('toevoegen').disabled = false;
+});
+$('toevoegen').addEventListener('click', async () => {
+  if (!nieuw) return;
+  try { await wijzig('Installateur toegevoegd: ' + nieuw.naam, l => (l.push(nieuw), l)); melding(`${nieuw.naam} staat erin. Over ongeveer een minuut is het live.`); $('plak').value = ''; $('voorbeeld').hidden = true; $('toevoegen').disabled = true; nieuw = null; toonLijst(); }
+  catch (e) { melding(e.message, 'fout'); }
+});
+$('lijst').addEventListener('click', async e => {
+  const b = e.target.closest('[data-weg]'); if (!b) return;
+  const i = lijst.find(x => x.id === b.dataset.weg);
+  if (!i || !confirm(`${i.naam} verwijderen?`)) return;
+  try { await wijzig('Installateur verwijderd: ' + i.naam, l => l.filter(x => x.id !== i.id)); melding('Verwijderd.'); toonLijst(); } catch (err) { melding(err.message, 'fout'); }
+});
+$('lijst').addEventListener('change', async e => {
+  const veld = e.target.closest('[data-score]'); if (!veld) return;
+  const waarde = veld.value === '' ? null : Math.max(1, Math.min(5, Math.round(parseFloat(veld.value) * 10) / 10));
+  try { await wijzig('Score bijgewerkt', l => { const i = l.find(x => x.id === veld.dataset.score); if (i) i.beoordeling = waarde; return l; }); melding('Score opgeslagen.'); }
+  catch (err) { melding(err.message, 'fout'); }
+});
+$('demoWeg').addEventListener('click', async () => {
+  if (!confirm('Alle voorbeeldprofielen verwijderen? Doe dit pas als er genoeg echte installateurs in staan.')) return;
+  try { await wijzig('Voorbeeldprofielen verwijderd', l => l.filter(x => !x.demo)); melding('Voorbeeldprofielen verwijderd.'); toonLijst(); } catch (err) { melding(err.message, 'fout'); }
+});
+
+async function start() {
+  if (!token) { $('login').hidden = false; $('beheer').hidden = true; return; }
+  try { await laden(); $('login').hidden = true; $('beheer').hidden = false; toonLijst(); }
+  catch (e) {
+    if (e.message === 'sleutel') { try { localStorage.removeItem('kir_token'); } catch (x) {} token = ''; $('login').hidden = false; melding('Deze sleutel werkt niet.', 'fout'); }
+    else melding(e.message, 'fout');
+  }
+}
+$('loginForm').addEventListener('submit', e => { e.preventDefault(); token = $('token').value.trim(); try { localStorage.setItem('kir_token', token); } catch (x) {} start(); });
+start();
+</script>
+</body>
+</html>

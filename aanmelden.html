@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installateur aanmelden – Thuiskompas</title>
+<meta name="description" content="Meld je installatiebedrijf aan bij Thuiskompas en ontvang aanvragen van klanten die bij je passen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+<div id="kop" data-actief="aanmelden"></div>
+
+<main>
+  <section class="pagina-kop">
+    <div class="wrap">
+      <span class="label">Voor installateurs</span>
+      <h1>Krijg klanten die écht bij je passen.</h1>
+      <p>Thuiskompas koppelt mensen aan de installateur die het best past bij hun klus, regio en wensen. Vul je profiel in. Hoe completer, hoe beter de matches.</p>
+    </div>
+  </section>
+
+  <div class="wrap" style="padding-bottom:96px">
+    <form id="aanmeldForm" novalidate>
+      <div class="form-blok">
+        <fieldset>
+          <legend>1. Je bedrijf</legend>
+          <div class="velden">
+            <div class="breed"><label for="naam">Bedrijfsnaam *</label><input id="naam" name="naam" required autocomplete="organization"></div>
+            <div><label for="kvk">KvK-nummer *</label><input id="kvk" name="kvk" required inputmode="numeric" pattern="[0-9]{8}" maxlength="8" placeholder="8 cijfers"></div>
+            <div><label for="plaats">Vestigingsplaats *</label><input id="plaats" name="plaats" required autocomplete="address-level2"></div>
+            <div class="breed"><label for="website">Website</label><input id="website" name="website" type="url" placeholder="https://"></div>
+            <div class="breed"><label for="omschrijving">Korte omschrijving (max. 160 tekens) *</label><textarea id="omschrijving" name="omschrijving" required maxlength="160" placeholder="Bijvoorbeeld: Familiebedrijf gespecialiseerd in warmtepompen in de regio Twente."></textarea></div>
+          </div>
+        </fieldset>
+      </div>
+
+      <div class="form-blok">
+        <fieldset>
+          <legend>2. Wat doe je? *</legend>
+          <p class="hint">Kies alles wat je aanbiedt.</p>
+          <div class="vinkjes" id="dienstenVakjes"></div>
+        </fieldset>
+        <fieldset>
+          <legend>3. Waar werk je? *</legend>
+          <p class="hint">Kies de provincies waar je klussen aanneemt.</p>
+          <div class="vinkjes" id="provincieVakjes"></div>
+        </fieldset>
+      </div>
+
+      <div class="form-blok">
+        <fieldset>
+          <legend>4. Hoe werk je?</legend>
+          <div class="velden">
+            <div><label for="startBinnenWeken">Hoe snel kun je meestal starten? *</label>
+              <select id="startBinnenWeken" name="startBinnenWeken" required>
+                <option value="">Kies…</option>
+                <option value="1">Binnen 1 week</option><option value="2">Binnen 2 weken</option><option value="3">Binnen 3 weken</option>
+                <option value="4">Binnen 4 weken</option><option value="6">Binnen 6 weken</option><option value="8">Langer dan 6 weken</option>
+              </select></div>
+            <div><label for="garantieJaren">Garantie op je werk (jaren) *</label><input id="garantieJaren" name="garantieJaren" type="number" min="0" max="25" required placeholder="Bijv. 5"></div>
+          </div>
+          <div>
+            <div class="velden" style="display:block"><label>Hoe zijn je prijzen? *</label></div>
+            <div class="radio-rij">
+              <div class="vinkje"><input type="radio" name="prijsniveau" id="p1" value="1" required><label for="p1">Voordelig</label></div>
+              <div class="vinkje"><input type="radio" name="prijsniveau" id="p2" value="2"><label for="p2">Gemiddeld</label></div>
+              <div class="vinkje"><input type="radio" name="prijsniveau" id="p3" value="3"><label for="p3">Premium</label></div>
+            </div>
+          </div>
+          <div>
+            <div class="velden" style="display:block"><label>Voor wie werk je? *</label></div>
+            <div class="radio-rij">
+              <div class="vinkje"><input type="checkbox" name="klant" id="k1" value="particulier" checked><label for="k1">Particulieren</label></div>
+              <div class="vinkje"><input type="checkbox" name="klant" id="k2" value="zakelijk"><label for="k2">Bedrijven</label></div>
+            </div>
+          </div>
+          <div class="vinkjes" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+            <div class="vinkje"><input type="checkbox" name="lokaal" id="lokaal"><label for="lokaal">We zijn een lokaal bedrijf met een eigen team uit de regio</label></div>
+            <div class="vinkje"><input type="checkbox" name="subsidiehulp" id="subsidiehulp"><label for="subsidiehulp">We helpen klanten met hun subsidieaanvraag</label></div>
+            <div class="vinkje"><input type="checkbox" name="keurmerk" id="keurmerk"><label for="keurmerk">We zijn erkend of hebben een keurmerk</label></div>
+          </div>
+          <div class="velden" id="keurmerkVeld" hidden>
+            <div class="breed"><label for="keurmerkNaam">Welke erkenning of welk keurmerk?</label><input id="keurmerkNaam" name="keurmerkNaam" placeholder="Bijvoorbeeld: lid van een brancheorganisatie, of een keurmerk"></div>
+          </div>
+          <div class="velden">
+            <div class="breed"><label for="reviews">Link naar je reviews (bijv. Google of Trustpilot)</label><input id="reviews" name="reviews" type="url" placeholder="https://"></div>
+          </div>
+          <p class="hint" style="margin:0">We nemen je beoordeling pas op nadat we je reviews hebben gecontroleerd.</p>
+        </fieldset>
+      </div>
+
+      <div class="form-blok">
+        <fieldset>
+          <legend>5. Contact</legend>
+          <div class="velden">
+            <div><label for="contactpersoon">Contactpersoon *</label><input id="contactpersoon" name="contactpersoon" required autocomplete="name"></div>
+            <div><label for="telefoon">Telefoon *</label><input id="telefoon" name="telefoon" type="tel" required autocomplete="tel"></div>
+            <div class="breed"><label for="email">E-mailadres voor aanvragen *</label><input id="email" name="email" type="email" required autocomplete="email"></div>
+          </div>
+        </fieldset>
+        <label class="akkoord"><input type="checkbox" id="akkoord" required> <span>Ik ga ermee akkoord dat Thuiskompas deze gegevens gebruikt om mijn bedrijf te tonen en aanvragen door te sturen. *</span></label>
+        <p class="foutje" id="fout" role="alert"></p>
+        <div><button type="submit" class="btn btn-accent" id="verstuur">Aanmelding versturen</button></div>
+      </div>
+    </form>
+
+    <div class="bedankt" id="bedankt" hidden>
+      <span class="label" style="align-self:flex-start">Aanmelding ontvangen</span>
+      <h2>Bedankt voor je aanmelding!</h2>
+      <p style="margin:0;color:var(--grijs)">We controleren je gegevens en zetten je profiel zo snel mogelijk online. Je hoort van ons via e-mail.</p>
+      <div><a class="btn btn-inkt" href="./">Terug naar Thuiskompas</a></div>
+    </div>
+  </div>
+</main>
+
+<div id="voet"></div>
+
+<script src="site.js"></script>
+<script>
+const CONFIG = {
+  // Formspree-adres voor aanmeldingen, bijv. 'https://formspree.io/f/abcdwxyz'
+  aanmeldFormulier: ''
+};
+const DIENSTEN = [['warmtepomp','Warmtepomp'],['zonnepanelen','Zonnepanelen'],['thuisbatterij','Thuisbatterij'],['cv-ketel','Cv-ketel'],['laadpaal','Laadpaal'],['airco','Airco'],['elektra','Elektra'],['sanitair','Loodgieterswerk']];
+const PROVINCIES = ['Heel Nederland','Groningen','Friesland','Drenthe','Overijssel','Flevoland','Gelderland','Utrecht','Noord-Holland','Zuid-Holland','Zeeland','Noord-Brabant','Limburg'];
+const $ = id => document.getElementById(id);
+const vakje = (naam, waarde, label, i) => `<div class="vinkje"><input type="checkbox" name="${naam}" id="${naam}-${i}" value="${waarde}"><label for="${naam}-${i}">${label}</label></div>`;
+$('dienstenVakjes').innerHTML = DIENSTEN.map(([w, l], i) => vakje('dienst', w, l, i)).join('');
+$('provincieVakjes').innerHTML = PROVINCIES.map((p, i) => vakje('provincie', p, p, i)).join('');
+
+// "Heel Nederland" sluit losse provincies uit
+$('provincieVakjes').addEventListener('change', e => {
+  const alles = $('provincieVakjes').querySelector('input[value="Heel Nederland"]');
+  if (e.target === alles && alles.checked) $('provincieVakjes').querySelectorAll('input').forEach(i => { if (i !== alles) i.checked = false; });
+  else if (e.target !== alles && e.target.checked) alles.checked = false;
+});
+$('keurmerk').addEventListener('change', () => { $('keurmerkVeld').hidden = !$('keurmerk').checked; });
+
+const slug = s => s.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
+
+$('aanmeldForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = $('aanmeldForm');
+  const fout = $('fout');
+  fout.textContent = '';
+  const gekozen = naam => [...form.querySelectorAll(`input[name="${naam}"]:checked`)].map(i => i.value);
+  if (!form.checkValidity()) { form.reportValidity(); fout.textContent = 'Vul alle verplichte velden in.'; return; }
+  if (!gekozen('dienst').length) { fout.textContent = 'Kies minstens één dienst.'; return; }
+  if (!gekozen('provincie').length) { fout.textContent = 'Kies minstens één provincie.'; return; }
+  if (!gekozen('klant').length) { fout.textContent = 'Kies voor wie je werkt.'; return; }
+
+  const v = Object.fromEntries(new FormData(form));
+  // Profiel in precies het formaat van installateurs.json, zodat je het in de beheerpagina kunt plakken
+  const profiel = {
+    id: slug(v.naam) + '-' + v.kvk.slice(-4),
+    naam: v.naam.trim(),
+    plaats: v.plaats.trim(),
+    provincies: gekozen('provincie'),
+    diensten: gekozen('dienst'),
+    prijsniveau: +v.prijsniveau,
+    startBinnenWeken: +v.startBinnenWeken,
+    garantieJaren: +v.garantieJaren,
+    beoordeling: null,
+    keurmerk: $('keurmerk').checked,
+    subsidiehulp: $('subsidiehulp').checked,
+    lokaal: $('lokaal').checked,
+    zakelijk: gekozen('klant').includes('zakelijk'),
+    omschrijving: v.omschrijving.trim(),
+    website: v.website.trim()
+  };
+  const intern = { kvk: v.kvk, keurmerkNaam: v.keurmerkNaam || '', reviews: v.reviews || '', contactpersoon: v.contactpersoon, telefoon: v.telefoon, email: v.email };
+
+  const knop = $('verstuur');
+  knop.disabled = true; knop.textContent = 'Bezig met versturen…';
+  try {
+    if (!CONFIG.aanmeldFormulier) throw new Error('niet-ingesteld');
+    const r = await fetch(CONFIG.aanmeldFormulier, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ _subject: `Nieuwe aanmelding: ${profiel.naam}`, ...intern, email: v.email, profiel_om_te_plakken: JSON.stringify(profiel) })
+    });
+    if (!r.ok) throw new Error('verzenden');
+    form.hidden = true; $('bedankt').hidden = false; window.scrollTo({ top: 0 });
+  } catch (err) {
+    fout.textContent = err.message === 'niet-ingesteld'
+      ? 'Aanmelden is binnenkort mogelijk. Probeer het later nog eens.'
+      : 'Versturen is niet gelukt. Probeer het later opnieuw.';
+    knop.disabled = false; knop.textContent = 'Aanmelding versturen';
+  }
+});
+</script>
+</body>
+</html>

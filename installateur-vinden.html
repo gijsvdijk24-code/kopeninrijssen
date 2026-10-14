@@ -1,0 +1,444 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Installateur vinden – Thuiskompas</title>
+<meta name="description" content="Beantwoord zeven korte vragen en ontdek welke installateur het best bij jou past. Gratis en zonder verplichtingen.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
+</head>
+<body>
+
+<div id="kop" data-actief="installateur"></div>
+
+<!-- ========== LANDINGSPAGINA ========== -->
+<main id="landing">
+  <section class="hero">
+    <div class="wrap hero-rij">
+      <div>
+        <span class="label">Gratis · 2 minuten · zonder verplichtingen</span>
+        <h1>Vind de installateur die <span>bij jou past.</span></h1>
+        <p>Er zijn duizenden installateurs in Nederland. Beantwoord zeven korte vragen en zie direct welke drie het best passen bij jouw klus, je woning en je wensen.</p>
+        <div class="hero-knoppen">
+          <button type="button" class="btn btn-accent" data-start>Start de vragenlijst
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <a href="#hoe" class="btn btn-rand">Hoe werkt het?</a>
+        </div>
+        <div class="hero-klein">
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F7A55" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Persoonlijke match</span>
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F7A55" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Je ziet waarom ze passen</span>
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F7A55" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Direct een offerte aanvragen</span>
+        </div>
+      </div>
+      <div class="voorproef" aria-hidden="true">
+        <div class="voortgang" style="margin:0"><div class="balk"><i style="width:43%"></i></div><span>Vraag 4 van 7</span></div>
+        <div class="vraag">Wat vind je het belangrijkst?</div>
+        <div class="vb-opties">
+          <div>Een scherpe prijs</div>
+          <div class="aan">Topkwaliteit</div>
+          <div>Snel geholpen</div>
+          <div>Een lokaal bedrijf</div>
+        </div>
+        <div class="vb-match"><b>94%</b><span>match met een erkende installateur uit jouw provincie</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sectie" id="hoe">
+    <div class="wrap">
+      <div class="sectie-kop">
+        <h2>In drie stappen naar de juiste vakman.</h2>
+        <p>Geen eindeloze lijsten met bedrijven. Je ziet alleen de installateurs die echt bij je passen.</p>
+      </div>
+      <div class="stappen">
+        <div class="stap"><span class="nr">1</span><h3>Beantwoord de vragen</h3><p>Wat moet er gebeuren, waar woon je en wat vind je belangrijk? Het kost je maar twee minuten.</p></div>
+        <div class="stap"><span class="nr">2</span><h3>Bekijk je matches</h3><p>Je ziet de drie installateurs die het best passen, met een matchscore en de redenen waarom.</p></div>
+        <div class="stap"><span class="nr">3</span><h3>Vraag een offerte aan</h3><p>Met één klik vraag je een vrijblijvende offerte aan bij de installateur van jouw keuze.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sectie">
+    <div class="wrap">
+      <div class="sectie-kop">
+        <h2>Waar zoek je een installateur voor?</h2>
+        <p>Kies je klus en begin meteen.</p>
+      </div>
+      <div class="diensten" id="dienstenLijst"></div>
+    </div>
+  </section>
+
+  <section class="sectie" id="installateurs">
+    <div class="wrap">
+      <div class="installateur-cta">
+        <div>
+          <h2>Ben jij installateur? Krijg klanten die écht bij je passen.</h2>
+          <p>Meld je bedrijf aan en ontvang aanvragen van mensen die precies zoeken wat jij biedt, in jouw regio.</p>
+        </div>
+        <a href="aanmelden.html" class="btn btn-accent">Meld je bedrijf aan</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- ========== VRAGENLIJST ========== -->
+<main id="quiz" class="quiz" hidden>
+  <div class="wrap">
+    <div class="quiz-kaart">
+      <div class="voortgang"><div class="balk"><i id="balk"></i></div><span id="teller"></span></div>
+      <form id="vraagForm" novalidate>
+        <div id="vraag"></div>
+        <div class="quiz-knoppen">
+          <button type="button" class="btn btn-tekst" id="terug">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg> Terug</button>
+          <button type="submit" class="btn btn-inkt" id="verder" disabled>Volgende</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- ========== RESULTATEN ========== -->
+<main id="uitslag" class="resultaten" hidden>
+  <div class="wrap">
+    <div class="resultaten-kop">
+      <span class="label">Jouw resultaat</span>
+      <h1 id="uitslagTitel">Dit zijn jouw beste matches.</h1>
+      <p id="uitslagTekst"></p>
+      <div class="samenvatting" id="samenvatting"></div>
+    </div>
+    <div class="demo-melding" id="demoMelding" hidden>Let op: dit zijn <b>voorbeeldprofielen</b> om te laten zien hoe de tool werkt. Het zijn geen echte bedrijven.</div>
+    <div class="matches" id="matches"></div>
+    <div style="margin-top:28px">
+      <button type="button" class="btn btn-rand" id="opnieuw">Opnieuw beginnen</button>
+    </div>
+  </div>
+</main>
+
+<!-- ========== OFFERTE ========== -->
+<dialog id="offerte" aria-labelledby="offerteTitel">
+  <form class="dlg" id="offerteForm" novalidate>
+    <h2 id="offerteTitel">Offerte aanvragen</h2>
+    <p id="offerteSub"></p>
+    <div class="velden">
+      <div><label for="o-naam">Naam *</label><input id="o-naam" name="naam" required autocomplete="name"></div>
+      <div><label for="o-tel">Telefoon *</label><input id="o-tel" name="telefoon" type="tel" required autocomplete="tel"></div>
+      <div class="breed"><label for="o-mail">E-mailadres *</label><input id="o-mail" name="email" type="email" required autocomplete="email"></div>
+      <div><label for="o-postcode">Postcode *</label><input id="o-postcode" name="postcode" required autocomplete="postal-code"></div>
+      <div><label for="o-huisnr">Huisnummer</label><input id="o-huisnr" name="huisnummer"></div>
+      <div class="breed"><label for="o-bericht">Toelichting (optioneel)</label><textarea id="o-bericht" name="bericht" placeholder="Bijvoorbeeld het bouwjaar van je woning, of je vragen"></textarea></div>
+    </div>
+    <p class="foutje" id="offerteFout" role="alert"></p>
+    <div class="dlg-knoppen">
+      <button type="button" class="btn btn-rand" id="offerteSluit">Annuleren</button>
+      <button type="submit" class="btn btn-accent" id="offerteVerstuur">Verstuur aanvraag</button>
+    </div>
+  </form>
+</dialog>
+
+<div id="voet"></div>
+
+<script src="site.js"></script>
+<script>
+// ===== Instellingen =====
+const CONFIG = {
+  // Formspree-adres voor offerteaanvragen, bijv. 'https://formspree.io/f/abcdwxyz'
+  aanvraagFormulier: ''
+};
+
+// ===== Iconen =====
+const IC = {
+  warmtepomp: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="10" cy="12" r="3"/><path d="M17 9v6"/>',
+  zonnepanelen: '<path d="M3 18l3-10h12l3 10z"/><path d="M9 8l-1 10M15 8l1 10M4.5 13h15"/>',
+  thuisbatterij: '<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M10 2h4M12 9l-2 4h4l-2 4"/>',
+  'cv-ketel': '<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M12 8c1.5 1.5 1.5 3 0 4.5s-1.5 3 0 4.5"/>',
+  laadpaal: '<rect x="5" y="3" width="10" height="18" rx="2"/><path d="M15 8h2a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2M10.5 8l-2 4h4l-2 4"/>',
+  airco: '<rect x="3" y="5" width="18" height="8" rx="2"/><path d="M7 17c0 1.5 1 2 1 3M12 17v3M17 17c0 1.5-1 2-1 3"/>',
+  elektra: '<path d="M13 2L5 14h6l-1 8 8-12h-6z"/>',
+  sanitair: '<path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/>',
+  huis: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
+  rij: '<path d="M2 20V9l5-4 5 4 5-4 5 4v11"/><path d="M2 20h20"/>',
+  vrij: '<path d="M4 11l8-6 8 6"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/>',
+  appartement: '<rect x="5" y="3" width="14" height="18"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/>',
+  bedrijf: '<path d="M3 21V9l6-4v4l6-4v4l6-4v16z"/>',
+  euro: '<path d="M17 6a7 7 0 1 0 0 12M4 10h10M4 14h10"/>',
+  ster: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  klok: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  pin: '<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  vink: '<path d="M5 12l5 5L20 7"/>',
+  schild: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  vraag: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01"/>',
+  nee: '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>'
+};
+const icoon = (n, kleur = 'currentColor', maat = 22) => `<svg width="${maat}" height="${maat}" viewBox="0 0 24 24" fill="none" stroke="${kleur}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = id => document.getElementById(id);
+
+// ===== De vragen =====
+const DIENSTEN = [
+  { waarde: 'warmtepomp', label: 'Warmtepomp', sub: 'Hybride of volledig elektrisch' },
+  { waarde: 'zonnepanelen', label: 'Zonnepanelen', sub: 'Nieuw of uitbreiden' },
+  { waarde: 'thuisbatterij', label: 'Thuisbatterij', sub: 'Stroom opslaan' },
+  { waarde: 'cv-ketel', label: 'Cv-ketel', sub: 'Vervangen of onderhoud' },
+  { waarde: 'laadpaal', label: 'Laadpaal', sub: 'Voor je elektrische auto' },
+  { waarde: 'airco', label: 'Airco', sub: 'Koelen en verwarmen' },
+  { waarde: 'elektra', label: 'Elektra', sub: 'Groepenkast, stopcontacten' },
+  { waarde: 'sanitair', label: 'Loodgieter', sub: 'Badkamer, lekkage, leidingen' }
+];
+const PROVINCIES = ['Groningen', 'Friesland', 'Drenthe', 'Overijssel', 'Flevoland', 'Gelderland', 'Utrecht', 'Noord-Holland', 'Zuid-Holland', 'Zeeland', 'Noord-Brabant', 'Limburg'];
+
+const VRAGEN = [
+  { id: 'dienst', titel: 'Waar heb je een installateur voor nodig?', uitleg: 'Kies de klus die je wilt laten doen.',
+    opties: DIENSTEN.map(d => ({ waarde: d.waarde, label: d.label, sub: d.sub, icoon: d.waarde })) },
+  { id: 'provincie', titel: 'In welke provincie woon je?', uitleg: 'Zo vinden we installateurs die bij jou in de buurt werken.', drie: true,
+    opties: PROVINCIES.map(p => ({ waarde: p, label: p })) },
+  { id: 'woning', titel: 'In wat voor pand moet het gebeuren?', uitleg: 'Elk type woning vraagt om een andere aanpak.',
+    opties: [
+      { waarde: 'rijtjeshuis', label: 'Rijtjeshuis', icoon: 'rij' },
+      { waarde: 'twee-onder-een-kap', label: 'Twee-onder-een-kap', icoon: 'huis' },
+      { waarde: 'vrijstaand', label: 'Vrijstaande woning', icoon: 'vrij' },
+      { waarde: 'appartement', label: 'Appartement', icoon: 'appartement' },
+      { waarde: 'bedrijf', label: 'Bedrijfspand', icoon: 'bedrijf' }
+    ] },
+  { id: 'prioriteit', titel: 'Wat vind je het belangrijkst?', uitleg: 'Kies wat voor jou de doorslag geeft.',
+    opties: [
+      { waarde: 'prijs', label: 'Een scherpe prijs', sub: 'Waar voor je geld', icoon: 'euro' },
+      { waarde: 'kwaliteit', label: 'Topkwaliteit', sub: 'Goede reviews en lange garantie', icoon: 'ster' },
+      { waarde: 'snel', label: 'Snel geholpen', sub: 'Zo snel mogelijk aan de slag', icoon: 'klok' },
+      { waarde: 'lokaal', label: 'Een lokaal bedrijf', sub: 'Persoonlijk en dichtbij', icoon: 'pin' }
+    ] },
+  { id: 'wanneer', titel: 'Wanneer wil je dat het klaar is?', uitleg: 'Zo weten we hoe belangrijk beschikbaarheid is.',
+    opties: [
+      { waarde: 'spoed', label: 'Zo snel mogelijk', sub: 'Binnen twee weken', icoon: 'klok' },
+      { waarde: 'maanden', label: 'Binnen 1 tot 3 maanden', icoon: 'klok' },
+      { waarde: 'orienteren', label: 'Ik ben nog aan het oriënteren', icoon: 'vraag' }
+    ] },
+  { id: 'keurmerk', titel: 'Moet de installateur erkend zijn?', uitleg: 'Een erkend bedrijf voldoet aan de eisen van een brancheorganisatie of keurmerk.',
+    opties: [
+      { waarde: 'ja', label: 'Ja, dat vind ik belangrijk', icoon: 'schild' },
+      { waarde: 'nee', label: 'Maakt me niet uit', icoon: 'nee' }
+    ] },
+  { id: 'subsidie', titel: 'Wil je hulp bij het aanvragen van subsidie?', uitleg: 'Voor bijvoorbeeld een warmtepomp kun je vaak subsidie krijgen.',
+    opties: [
+      { waarde: 'ja', label: 'Ja, graag', icoon: 'euro' },
+      { waarde: 'nee', label: 'Nee, niet nodig', icoon: 'nee' }
+    ] }
+];
+
+// ===== Toestand =====
+let stap = 0;
+const antwoorden = {};
+let gekozenInstallateur = null;
+const installateursLaden = fetch('installateurs.json?v=' + Date.now(), { cache: 'no-store' })
+  .then(r => r.ok ? r.json() : []).catch(() => []).then(d => Array.isArray(d) ? d : []);
+
+function toon(scherm) {
+  ['landing', 'quiz', 'uitslag'].forEach(s => { $(s).hidden = s !== scherm; });
+  window.scrollTo({ top: 0 });
+}
+
+// ===== Vragenlijst =====
+let toetsenbord = false;
+function toonVraag() {
+  const v = VRAGEN[stap];
+  $('balk').style.width = (stap / VRAGEN.length * 100) + '%';
+  $('teller').textContent = `Vraag ${stap + 1} van ${VRAGEN.length}`;
+  $('vraag').innerHTML = `
+    <fieldset>
+      <legend>${esc(v.titel)}</legend>
+      <p class="uitleg">${esc(v.uitleg)}</p>
+      <div class="opties ${v.drie ? 'drie' : ''}">
+        ${v.opties.map((o, i) => `
+          <div class="optie">
+            <input type="radio" name="${v.id}" id="o-${v.id}-${i}" value="${esc(o.waarde)}" ${antwoorden[v.id] === o.waarde ? 'checked' : ''}>
+            <label for="o-${v.id}-${i}">${o.icoon ? `<span class="icoon">${icoon(o.icoon)}</span>` : ''}<span>${esc(o.label)}${o.sub ? `<small>${esc(o.sub)}</small>` : ''}</span></label>
+          </div>`).join('')}
+      </div>
+    </fieldset>`;
+  $('verder').disabled = !antwoorden[v.id];
+  $('verder').textContent = stap === VRAGEN.length - 1 ? 'Toon mijn matches' : 'Volgende';
+}
+
+// Met muis of vinger: na een keuze automatisch door. Met het toetsenbord: zelf op Volgende drukken.
+$('vraagForm').addEventListener('keydown', () => { toetsenbord = true; });
+$('vraagForm').addEventListener('pointerdown', () => { toetsenbord = false; });
+$('vraagForm').addEventListener('change', e => {
+  if (e.target.type !== 'radio') return;
+  antwoorden[VRAGEN[stap].id] = e.target.value;
+  $('verder').disabled = false;
+  if (!toetsenbord) setTimeout(volgende, 260);
+});
+$('vraagForm').addEventListener('submit', e => { e.preventDefault(); volgende(); });
+
+function volgende() {
+  if (!antwoorden[VRAGEN[stap].id]) return;
+  if (stap < VRAGEN.length - 1) { stap++; toonVraag(); window.scrollTo({ top: 0 }); }
+  else toonUitslag();
+}
+$('terug').addEventListener('click', () => {
+  if (stap === 0) { toon('landing'); return; }
+  stap--; toonVraag();
+});
+
+function startQuiz(dienst) {
+  stap = 0;
+  Object.keys(antwoorden).forEach(k => delete antwoorden[k]);
+  if (dienst) { antwoorden.dienst = dienst; stap = 1; }
+  toon('quiz'); toonVraag();
+}
+document.querySelectorAll('[data-start]').forEach(b => b.addEventListener('click', () => startQuiz()));
+$('opnieuw').addEventListener('click', () => startQuiz());
+
+$('dienstenLijst').innerHTML = DIENSTEN.map(d => `
+  <button type="button" class="dienst" data-dienst="${d.waarde}"><span class="icoon">${icoon(d.waarde)}</span><span>${esc(d.label)}</span></button>`).join('');
+$('dienstenLijst').addEventListener('click', e => { const b = e.target.closest('[data-dienst]'); if (b) startQuiz(b.dataset.dienst); });
+
+// Direct starten met een klus via de link, bijv. installateur-vinden.html?klus=laadpaal
+const klusUitLink = new URLSearchParams(location.search).get('klus');
+if (DIENSTEN.some(d => d.waarde === klusUitLink)) startQuiz(klusUitLink);
+
+// ===== Matching =====
+// Elke installateur krijgt een score tussen 0 en 1. Hij moet de gevraagde klus doen.
+function beoordeel(i, a) {
+  const redenen = [];
+  const minpunten = [];
+  const landelijk = (i.provincies || []).includes('Heel Nederland');
+  const inProvincie = (i.provincies || []).includes(a.provincie);
+
+  const regio = inProvincie ? 1 : landelijk ? 0.7 : 0;
+  if (inProvincie) redenen.push(`Werkt in ${a.provincie}`);
+  else if (landelijk) redenen.push('Werkt in heel Nederland');
+  else minpunten.push(`Werkt niet in ${a.provincie}`);
+
+  const prijs = (3 - (i.prijsniveau || 2)) / 2;
+  const snel = Math.max(0, 1 - ((i.startBinnenWeken || 4) - 1) / 7);
+  const heeftScore = typeof i.beoordeling === 'number';
+  const kwaliteit = (heeftScore ? Math.max(0, (i.beoordeling - 3.5) / 1.5) : 0.5) * 0.6 + Math.min(1, (i.garantieJaren || 2) / 10) * 0.4;
+  const lokaal = i.lokaal && inProvincie ? 1 : inProvincie ? 0.5 : 0;
+
+  const w = { regio: 3, prijs: 1, snel: 1, kwaliteit: 1, lokaal: 0.5 };
+  w[a.prioriteit] += 3;
+  if (a.wanneer === 'spoed') w.snel += 2;
+  if (a.wanneer === 'maanden') w.snel += 0.5;
+
+  let som = w.regio * regio + w.prijs * prijs + w.snel * snel + w.kwaliteit * kwaliteit + w.lokaal * lokaal;
+  let max = w.regio + w.prijs + w.snel + w.kwaliteit + w.lokaal;
+
+  if (a.keurmerk === 'ja') { max += 2; if (i.keurmerk) { som += 2; redenen.push('Erkend installateur'); } else minpunten.push('Niet erkend'); }
+  if (a.subsidie === 'ja') { max += 1.5; if (i.subsidiehulp) { som += 1.5; redenen.push('Helpt met je subsidieaanvraag'); } else minpunten.push('Geen hulp bij subsidie'); }
+  if (a.woning === 'bedrijf') { max += 1.5; if (i.zakelijk) { som += 1.5; redenen.push('Ervaring met bedrijfspanden'); } else minpunten.push('Werkt vooral voor particulieren'); }
+
+  if (a.prioriteit === 'prijs' && prijs === 1) redenen.push('Scherp geprijsd');
+  if (a.prioriteit === 'prijs' && prijs === 0) minpunten.push('In het hogere prijssegment');
+  if (a.prioriteit === 'kwaliteit' && (i.beoordeling || 0) >= 4.6) redenen.push(`Sterke beoordeling (${String(i.beoordeling).replace('.', ',')})`);
+  if (a.prioriteit === 'kwaliteit' && (i.garantieJaren || 0) >= 7) redenen.push(`${i.garantieJaren} jaar garantie`);
+  if ((a.prioriteit === 'snel' || a.wanneer === 'spoed') && (i.startBinnenWeken || 9) <= 2) redenen.push(i.startBinnenWeken <= 1 ? 'Kan deze week nog starten' : 'Kan binnen 2 weken starten');
+  if ((a.prioriteit === 'snel' || a.wanneer === 'spoed') && (i.startBinnenWeken || 0) > 4) minpunten.push(`Start pas over ${i.startBinnenWeken} weken`);
+  if (a.prioriteit === 'lokaal' && lokaal === 1) redenen.push('Lokaal bedrijf uit de regio');
+
+  return { i, score: som / max, regio, redenen: [...new Set(redenen)], minpunten: [...new Set(minpunten)] };
+}
+
+async function toonUitslag() {
+  const installateurs = await installateursLaden;
+  const a = antwoorden;
+  const dienst = DIENSTEN.find(d => d.waarde === a.dienst);
+  const klus = (dienst?.label || '').toLowerCase();
+  const kandidaten = installateurs.filter(i => (i.diensten || []).includes(a.dienst)).map(i => beoordeel(i, a));
+  const inRegio = kandidaten.filter(k => k.regio > 0).sort((x, y) => y.score - x.score);
+  const buiten = kandidaten.filter(k => k.regio === 0).sort((x, y) => y.score - x.score);
+  const top = (inRegio.length ? inRegio : buiten).slice(0, 3);
+
+  const label = (n, w) => VRAGEN[n].opties.find(o => o.waarde === w)?.label;
+  $('samenvatting').innerHTML = [dienst?.label, a.provincie, label(2, a.woning), label(3, a.prioriteit), label(4, a.wanneer)]
+    .filter(Boolean).map(t => `<span>${esc(t)}</span>`).join('');
+  $('demoMelding').hidden = !top.some(k => k.i.demo);
+
+  if (!top.length) {
+    $('uitslagTitel').textContent = 'We hebben nog geen match voor je.';
+    $('uitslagTekst').textContent = `Er is nog geen installateur voor ${klus} aangesloten. We breiden ons netwerk snel uit.`;
+    $('matches').innerHTML = '';
+    toon('uitslag'); return;
+  }
+  $('uitslagTitel').textContent = inRegio.length ? 'Dit zijn jouw beste matches.' : 'Nog niemand in jouw provincie.';
+  $('uitslagTekst').textContent = inRegio.length
+    ? `We hebben ${kandidaten.length} ${kandidaten.length === 1 ? 'installateur' : 'installateurs'} voor ${klus} vergeleken. ${top.length === 1 ? 'Deze past' : `Deze ${top.length} passen`} het best bij jouw antwoorden.`
+    : `Er werkt nog geen installateur voor ${klus} in ${a.provincie}. Dit zijn de beste opties daarbuiten.`;
+
+  const VINK = icoon('vink', '#1F7A55', 18);
+  const MIN = icoon('nee', '#9AA3B5', 18);
+  $('matches').innerHTML = top.map((k, n) => {
+    const pct = Math.round(55 + k.score * 44);
+    const i = k.i;
+    const niveau = Math.min(3, Math.max(1, i.prijsniveau || 2));
+    return `
+    <article class="match ${n === 0 ? 'beste' : ''}">
+      <div class="score" style="--p:${pct}" role="img" aria-label="${pct} procent match"><div><b>${pct}%</b><small>match</small></div></div>
+      <div class="match-info">
+        <div class="match-top">
+          ${n === 0 ? '<span class="badge beste">Beste match</span>' : ''}
+          ${i.keurmerk ? `<span class="badge">${icoon('schild', 'currentColor', 14)} Erkend</span>` : ''}
+          ${i.demo ? '<span class="badge demo">Voorbeeldprofiel</span>' : ''}
+        </div>
+        <h2>${esc(i.naam)}</h2>
+        <div class="plaats">${esc(i.plaats)} · ${esc((i.provincies || []).join(', '))}</div>
+        ${i.omschrijving ? `<p class="oms">${esc(i.omschrijving)}</p>` : ''}
+        <div class="feiten">
+          ${typeof i.beoordeling === 'number' ? `<span>Beoordeling <b>${esc(String(i.beoordeling).replace('.', ','))}</b>/5</span>` : ''}
+          <span>Start binnen <b>${esc(i.startBinnenWeken)} ${i.startBinnenWeken === 1 ? 'week' : 'weken'}</b></span>
+          <span>Garantie <b>${esc(i.garantieJaren)} jaar</b></span>
+          <span>Prijs <b>${'€'.repeat(niveau)}</b><span style="opacity:.35">${'€'.repeat(3 - niveau)}</span></span>
+        </div>
+        <ul class="redenen">
+          ${k.redenen.slice(0, 6).map(r => `<li>${VINK}<span>${esc(r)}</span></li>`).join('')}
+          ${k.minpunten.slice(0, 2).map(r => `<li class="min">${MIN}<span>${esc(r)}</span></li>`).join('')}
+        </ul>
+      </div>
+      <div class="match-acties">
+        <button type="button" class="btn ${n === 0 ? 'btn-accent' : 'btn-inkt'}" data-offerte="${esc(i.id)}">Offerte aanvragen</button>
+        ${/^https?:\/\//.test(i.website || '') ? `<a class="btn btn-rand" href="${esc(i.website)}" target="_blank" rel="noopener">Website</a>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+  toon('uitslag');
+}
+
+// ===== Offerte aanvragen =====
+$('matches').addEventListener('click', async e => {
+  const b = e.target.closest('[data-offerte]');
+  if (!b) return;
+  gekozenInstallateur = (await installateursLaden).find(i => i.id === b.dataset.offerte);
+  $('offerteSub').textContent = `Je aanvraag gaat naar ${gekozenInstallateur.naam}. Zij nemen zo snel mogelijk contact met je op.`;
+  $('offerteFout').textContent = '';
+  $('offerte').showModal();
+});
+$('offerteSluit').addEventListener('click', () => $('offerte').close());
+$('offerteForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = $('offerteForm');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const v = Object.fromEntries(new FormData(form));
+  const knop = $('offerteVerstuur');
+  knop.disabled = true; knop.textContent = 'Bezig met versturen…';
+  try {
+    if (!CONFIG.aanvraagFormulier) throw new Error('niet-ingesteld');
+    const r = await fetch(CONFIG.aanvraagFormulier, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ _subject: `Offerteaanvraag voor ${gekozenInstallateur.naam}`, installateur: gekozenInstallateur.naam, ...antwoorden, ...v })
+    });
+    if (!r.ok) throw new Error('verzenden');
+    form.innerHTML = `<h2>Aanvraag verstuurd</h2><p>${esc(gekozenInstallateur.naam)} neemt zo snel mogelijk contact met je op.</p>
+      <div class="dlg-knoppen"><button type="button" class="btn btn-inkt" onclick="document.getElementById('offerte').close()">Sluiten</button></div>`;
+  } catch (err) {
+    $('offerteFout').textContent = err.message === 'niet-ingesteld'
+      ? 'Offertes aanvragen is binnenkort mogelijk.'
+      : 'Versturen is niet gelukt. Probeer het later opnieuw.';
+    knop.disabled = false; knop.textContent = 'Verstuur aanvraag';
+  }
+});
+</script>
+</body>
+</html>
