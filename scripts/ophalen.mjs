@@ -296,19 +296,18 @@ function hostNaam(url) {
 function raadCategorie(tekst, url = '') {
   const t = ' ' + tekst.toLowerCase() + ' ';
   const regels = [
-    ['Klussen & tuin', /\b(tegel|tegels|vloertegel|wandtegel|bestrating|vloer|laminaat|parket|gereedschap|boor|zaag|schroef|verf|tuinset|schutting|grind|terras|keramisch)/],
-    ['Eten & drinken', /\b(brood|krentenwegge|wegge|koek|taart|kaas|worst|vlees|wijn|bier|koffie|thee|chocola|snoep|gebak|banket|honing|jam|saus)/],
-    ['Bloemen & planten', /\b(bloem|boeket|kamerplant|plant |planten|tulp|roos|rozen|orchidee)/],
-    ['Mode', /\b(jas|jassen|jack|jacket|puffer|jurk|broek|jeans|denim|shirt|t-shirt|trui|truien|pullover|vest|blouse|muts|cap|pet|schoen|sneaker|sokken|handtas|riem|sjaal|kleding|horloge|sieraad|ketting|armband|oorbel|lingerie|ondergoed|pyjama)/],
-    ['Boeken & hobby', /\b(boek|roman|puzzel|bordspel|knutsel|wol|garen|hobby|tekenset)/],
-    ['Sport & vrije tijd', /\b(fiets|sport|voetbal|hardloop|fitness|kamperen|wandelschoen|zwem|tennis)/],
-    ['Wonen & cadeaus', /\b(kaars|vaas|kussen|plaid|lamp|servies|mok|decoratie|cadeau|interieur|geurstok)/]
+    ['Terras & buiten', /\b(vuurschaal|vuurkorf|vuurtafel|terrasverwarm|terrasheater|heater|bbq|barbecue|kamado|grill|pizza-?oven|parasol|tuinhaard|loungeset|buitenkeuken)/],
+    ['Klussen', /\b(boormachine|accuboor|schroefmachine|zaag|cirkelzaag|decoupeer|schuurmachine|slijper|gereedschap|bit-?set|ladder|werkbank|verf|kit\b|tegel|tegels|vloertegel|laminaat)/],
+    ['Tuin', /\b(grasmaaier|maaier|robotmaaier|trimmer|heggenschaar|bladblazer|snoei|kettingzaag|hogedrukreiniger|tuinslang|tuinset|tuinstoel|tuintafel|tuinbank|plantenbak|kas\b|compost|zaad|bestrating)/],
+    ['Verlichting', /\b(lamp|lampen|verlichting|led|lichtsnoer|lantaarn|wandlamp|hanglamp|vloerlamp|spot|grondspot|solar)/],
+    ['Keuken', /\b(pan|pannen|mes|messen|airfryer|blender|koffie|espresso|servies|bord|glazen|bestek|snijplank|keuken|oven)/],
+    ['Wonen', /\b(plaid|kussen|vloerkleed|gordijn|vaas|kaars|decoratie|opberg|mand\b|spiegel|bijzettafel|stoel|bank\b|bed|dekbed|handdoek|interieur)/]
   ];
   for (const [cat, re] of regels) if (re.test(t)) return cat;
   let host = ''; try { host = new URL(url).hostname; } catch {}
-  if (/mode|kleding|fashion|schoen|jeans|juwelier/.test(host)) return 'Mode';
-  if (/bloem/.test(host)) return 'Bloemen & planten';
-  if (/boek|hobby/.test(host)) return 'Boeken & hobby';
+  if (/tuin|garden/.test(host)) return 'Tuin';
+  if (/klus|bouw|gereedschap|tool/.test(host)) return 'Klussen';
+  if (/lamp|licht|light/.test(host)) return 'Verlichting';
   return '';
 }
 

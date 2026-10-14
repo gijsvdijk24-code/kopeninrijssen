@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Winkelmandje – Kopen in Rijssen</title>
+<title>Winkelmandje – ERF</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -35,8 +35,8 @@ function render() {
   if (!lijst.length) {
     main.innerHTML = `<h1 class="display">Winkelmandje</h1>
       <div class="leeg-mandje"><h2 class="display" style="margin:0">Je mandje is nog leeg</h2>
-      <p style="margin:0;color:var(--grijs)">Ontdek producten van de winkels uit Rijssen.</p>
-      <a class="btn btn-groen" href="./#producten">Begin met shoppen</a></div>`;
+      <p style="margin:0;color:var(--grijs)">Ontdek alles voor binnen en buiten.</p>
+      <a class="btn btn-groen" href="./#producten">Bekijk de collectie</a></div>`;
     return;
   }
   const subtotaal = lijst.reduce((s, r) => s + r.totaal, 0);
@@ -51,7 +51,7 @@ function render() {
         ${isUrl(r.p.afbeelding) ? `<img src="${esc(r.p.afbeelding)}" alt="">` : '<span class="geen"></span>'}
         <div class="info">
           <a href="product.html?id=${encodeURIComponent(r.p.id)}">${esc(r.p.naam)}</a>
-          <small>${r.variant ? esc(r.variant) + ' · ' : ''}${esc(r.p.winkel)} · ${euro(r.prijs)} per ${esc(verpakkingTekst(r.p))}${heeftEenheid(r.p) && r.p.inhoud ? ` · totaal ${getalNL(r.aantal * r.p.inhoud)} ${esc(r.p.eenheid)}` : ''}</small>
+          <small>${r.variant ? esc(r.variant) + ' · ' : ''}${euro(r.prijs)} per ${esc(verpakkingTekst(r.p))}${heeftEenheid(r.p) && r.p.inhoud ? ` · totaal ${getalNL(r.aantal * r.p.inhoud)} ${esc(r.p.eenheid)}` : ''}</small>
         </div>
         <div class="stepper">
           <button type="button" data-min="${r.index}" aria-label="Eén minder">−</button>
@@ -69,7 +69,7 @@ function render() {
         <form id="bestelForm" class="formulier" novalidate>
           <div class="breed keuze" role="radiogroup" aria-label="Bezorgen of afhalen">
             <label><input type="radio" name="levering" value="Bezorgen" checked> Bezorgen</label>
-            <label><input type="radio" name="levering" value="Afhalen in de winkel"> Afhalen in de winkel</label>
+            <label><input type="radio" name="levering" value="Afhalen"> Afhalen</label>
           </div>
           <div><label for="voornaam">Voornaam *</label><input id="voornaam" name="voornaam" required autocomplete="given-name"></div>
           <div><label for="achternaam">Achternaam *</label><input id="achternaam" name="achternaam" required autocomplete="family-name"></div>
@@ -89,7 +89,7 @@ function render() {
       <div class="lijn"><span>Bezorgen</span><span id="bezorgRegel">${bezorg == null ? 'volgt' : euro(bezorg)}</span></div>
       <div class="lijn totaal"><span>Totaal</span><span id="totaalRegel">${euro(subtotaal + (bezorg || 0))}</span></div>
       <button type="submit" form="bestelForm" class="btn btn-groen" id="bestelKnop">Bestelling plaatsen</button>
-      <p class="klein">Je ontvangt binnen één werkdag een bevestiging met een betaalverzoek via iDEAL. Pas na betaling regelen we je bestelling met de winkel.</p>
+      <p class="klein">Je ontvangt binnen één werkdag een bevestiging met een betaalverzoek via iDEAL. Na betaling gaat je bestelling direct in behandeling.</p>
       <p class="klein" id="fout" role="alert" style="color:#B42318;font-weight:600"></p>
     </aside>
   </div>`;
@@ -149,7 +149,7 @@ async function bestel(lijst, subtotaal, levering) {
 KLANT
 ${v.voornaam} ${v.achternaam}
 ${v.email} · ${v.telefoon}
-${afhalen ? 'Afhalen in de winkel' : `Bezorgen: ${v.straat}, ${v.postcode} nr. ${v.huisnummer}`}
+${afhalen ? 'Afhalen' : `Bezorgen: ${v.straat}, ${v.postcode} nr. ${v.huisnummer}`}
 ${v.opmerking ? 'Opmerking: ' + v.opmerking : ''}
 
 PRODUCTEN
