@@ -296,18 +296,16 @@ function hostNaam(url) {
 function raadCategorie(tekst, url = '') {
   const t = ' ' + tekst.toLowerCase() + ' ';
   const regels = [
-    ['Terras & buiten', /\b(vuurschaal|vuurkorf|vuurtafel|terrasverwarm|terrasheater|heater|bbq|barbecue|kamado|grill|pizza-?oven|parasol|tuinhaard|loungeset|buitenkeuken)/],
-    ['Klussen', /\b(boormachine|accuboor|schroefmachine|zaag|cirkelzaag|decoupeer|schuurmachine|slijper|gereedschap|bit-?set|ladder|werkbank|verf|kit\b|tegel|tegels|vloertegel|laminaat)/],
-    ['Tuin', /\b(grasmaaier|maaier|robotmaaier|trimmer|heggenschaar|bladblazer|snoei|kettingzaag|hogedrukreiniger|tuinslang|tuinset|tuinstoel|tuintafel|tuinbank|plantenbak|kas\b|compost|zaad|bestrating)/],
-    ['Verlichting', /\b(lamp|lampen|verlichting|led|lichtsnoer|lantaarn|wandlamp|hanglamp|vloerlamp|spot|grondspot|solar)/],
-    ['Keuken', /\b(pan|pannen|mes|messen|airfryer|blender|koffie|espresso|servies|bord|glazen|bestek|snijplank|keuken|oven)/],
-    ['Wonen', /\b(plaid|kussen|vloerkleed|gordijn|vaas|kaars|decoratie|opberg|mand\b|spiegel|bijzettafel|stoel|bank\b|bed|dekbed|handdoek|interieur)/]
+    ['Rituelen', /\b(cadeauset|giftset|gift set|geschenkset|starterset|ritueelset|incense set|ceremony set)/],
+    ['Branders', /\b(brander|houder|burner|censer|holder|wierookhouder|backflow|terugstroom|incense plate|xiang lu|ash catcher)/],
+    ['Geurzakjes', /\b(geurzakje|sachet|zakje|pouch|xiangnang)/],
+    ['Thee', /\b(thee|tea|pu-?erh|oolong|gongfu|gaiwan|theepot|teapot|theeset|matcha|jasmijn)/],
+    ['Wierook', /\b(wierook|incense|kegel|cone|spiraal|coil|stokje|stick|sandelhout|sandalwood|agarhout|agarwood|oud\b|osmanthus)/]
   ];
   for (const [cat, re] of regels) if (re.test(t)) return cat;
   let host = ''; try { host = new URL(url).hostname; } catch {}
-  if (/tuin|garden/.test(host)) return 'Tuin';
-  if (/klus|bouw|gereedschap|tool/.test(host)) return 'Klussen';
-  if (/lamp|licht|light/.test(host)) return 'Verlichting';
+  if (/incense|wierook|xiang/.test(host)) return 'Wierook';
+  if (/tea|thee/.test(host)) return 'Thee';
   return '';
 }
 

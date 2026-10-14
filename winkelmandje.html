@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Winkelmandje – ERF</title>
+<title>Winkelmandje – XIANG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600&text=%E9%A6%99&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -35,7 +36,7 @@ function render() {
   if (!lijst.length) {
     main.innerHTML = `<h1 class="display">Winkelmandje</h1>
       <div class="leeg-mandje"><h2 class="display" style="margin:0">Je mandje is nog leeg</h2>
-      <p style="margin:0;color:var(--grijs)">Ontdek alles voor binnen en buiten.</p>
+      <p style="margin:0;color:var(--grijs)">Ontdek wierook, branders en thee.</p>
       <a class="btn btn-groen" href="./#producten">Bekijk de collectie</a></div>`;
     return;
   }
@@ -178,7 +179,7 @@ Totaal: ${euro(subtotaal + (bezorg || 0))}`;
     Mandje.leeg();
     main.innerHTML = `
       <div class="bevestiging">
-        <div class="vink"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#13532E" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></div>
+        <div class="vink"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#F7F3EC" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg></div>
         <h1 class="display" style="margin:0">Bedankt voor je bestelling!</h1>
         <p style="margin:0">Je ordernummer is <b>${esc(nr)}</b>.</p>
         <p style="margin:0;color:var(--grijs)">We sturen je binnen één werkdag een bevestiging met een betaalverzoek naar <b>${esc(v.email)}</b>.</p>

@@ -107,19 +107,20 @@ document.addEventListener('click', async e => {
 });
 
 // ===== Header en footer (op elke pagina hetzelfde) =====
+const MERK = 'XIANG';
 const CATEGORIEEN = [
-  { naam: 'Tuin', sub: 'Gereedschap, meubels en onderhoud' },
-  { naam: 'Terras & buiten', sub: 'Vuur, licht en warmte' },
-  { naam: 'Klussen', sub: 'Elektrisch gereedschap en accessoires' },
-  { naam: 'Verlichting', sub: 'Binnen en buiten' },
-  { naam: 'Wonen', sub: 'Textiel, decoratie en opbergen' },
-  { naam: 'Keuken', sub: 'Koken, tafelen en apparaten' }
+  { naam: 'Wierook', sub: 'Stokjes, kegels en spiralen' },
+  { naam: 'Branders', sub: 'Keramiek, brons en steen' },
+  { naam: 'Geurzakjes', sub: 'Voor kast, auto en kussen' },
+  { naam: 'Thee', sub: 'Losse thee en gongfu-sets' },
+  { naam: 'Rituelen', sub: 'Complete sets en cadeaus' }
 ];
 const ICOON = {
-  zoek: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
-  mandje: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>'
+  zoek: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>',
+  mandje: '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h14l-1.2 12H6.2z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>'
 };
-const merkVan = p => ((p.specificaties || []).find(s => /^merk$/i.test(s.naam)) || {}).waarde || p.categorie || '';
+const merkVan = p => ((p.specificaties || []).find(s => /^(merk|geur|geurfamilie)$/i.test(s.naam)) || {}).waarde || p.categorie || '';
+const ZEGEL = (klasse = '') => `<span class="zegel ${klasse}" aria-hidden="true">香</span>`;
 
 function bouwHeader() {
   const plek = document.getElementById('kop');
@@ -127,17 +128,15 @@ function bouwHeader() {
   plek.outerHTML = `
   <div class="topbalk"><div class="wrap">
     <span>Gratis verzending vanaf [BEDRAG]</span>
-    <span>Voor [TIJD] besteld, [LEVERTIJD] in huis</span>
-    <span>14 dagen bedenktijd</span>
+    <span>Met de hand gemaakt</span>
+    <span>Cadeauverpakking op aanvraag</span>
   </div></div>
   <header>
     <div class="wrap header-rij">
-      <a href="./" class="logo" aria-label="ERF, naar de homepage">
-        <span class="logo-tekst display">ERF</span><span class="logo-sub">Wonen · binnen &amp; buiten</span>
-      </a>
-      <nav class="cat-nav" aria-label="Categorieën">
+      <nav class="cat-nav" aria-label="Collectie">
         ${CATEGORIEEN.map(c => `<a href="./?categorie=${encodeURIComponent(c.naam)}#producten">${esc(c.naam)}</a>`).join('')}
       </nav>
+      <a href="./" class="logo" aria-label="${MERK}, naar de homepage">${ZEGEL()}<span class="logo-tekst">${MERK}</span></a>
       <div class="header-acties">
         <form class="zoek" role="search" action="./" method="get">
           <label for="zoek" class="sr-only">Zoeken</label>
@@ -157,12 +156,12 @@ function bouwFooter() {
   <footer>
     <div class="wrap">
       <div class="grid-footer">
-        <div><span class="footer-logo display">ERF</span><span>Alles voor je huis, je tuin en daartussen.</span></div>
-        <div><b>Shop</b>${CATEGORIEEN.slice(0, 4).map(c => `<a href="./?categorie=${encodeURIComponent(c.naam)}#producten">${esc(c.naam)}</a>`).join('')}</div>
-        <div><b>Service</b><a href="#">Bezorgen</a><a href="#">Retourneren</a><a href="#">Contact</a></div>
-        <div><b>Over ERF</b><a href="#">Ons verhaal</a><a href="#">Voorwaarden</a><a href="#">Privacy</a></div>
+        <div><div class="footer-merk">${ZEGEL()}<span class="footer-logo">${MERK}</span></div><span>Geur als ritueel. Handgemaakte wierook, branders en thee uit China.</span></div>
+        <div><b>Collectie</b>${CATEGORIEEN.map(c => `<a href="./?categorie=${encodeURIComponent(c.naam)}#producten">${esc(c.naam)}</a>`).join('')}</div>
+        <div><b>Service</b><a href="#">Verzending</a><a href="#">Retourneren</a><a href="#">Veilig branden</a><a href="#">Contact</a></div>
+        <div><b>${MERK}</b><a href="#">Ons verhaal</a><a href="#">Voorwaarden</a><a href="#">Privacy</a></div>
       </div>
-      <div class="onderregel"><span>© 2026 ERF</span><span>Betalen met iDEAL</span></div>
+      <div class="onderregel"><span>© 2026 ${MERK}</span><span>Betalen met iDEAL</span></div>
     </div>
   </footer>`;
 }

@@ -3,10 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Product – ERF</title>
+<title>Product – XIANG</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..100,400..800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600&text=%E9%A6%99&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -20,7 +21,7 @@
 
 <script src="shop.js"></script>
 <script>
-const VINK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#111110" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
+const VINK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>';
 
 (async () => {
   const id = new URLSearchParams(location.search).get('id');
@@ -33,7 +34,7 @@ const VINK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke
     return;
   }
 
-  document.title = `${p.naam} – ERF`;
+  document.title = `${p.naam} – XIANG`;
   const fotos = (p.afbeeldingen && p.afbeeldingen.length ? p.afbeeldingen : [p.afbeelding]).filter(isUrl);
   const varianten = (p.varianten || []).filter(v => v.naam);
   const specs = (p.specificaties || []).filter(s => s.naam && s.waarde);
@@ -82,7 +83,7 @@ const VINK = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke
 
         <div class="zekerheden">
           <div>${VINK}<span>Gratis verzending vanaf [BEDRAG]</span></div>
-          <div>${VINK}<span>Veilig betalen na bevestiging van je bestelling</span></div>
+          <div>${VINK}<span>Met de hand gemaakt, in kleine oplages</span></div>
           <div>${VINK}<span>14 dagen bedenktijd</span></div>
         </div>
       </div>
