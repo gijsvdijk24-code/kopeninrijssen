@@ -3,159 +3,604 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>XIANG – Geur als ritueel</title>
-<meta name="description" content="Handgemaakte Chinese wierook, branders, geurzakjes en thee. Het geurritueel waar jong China massaal tot rust mee komt, nu in Nederland.">
+<title>Installatiekompas – Vind de installateur die bij je past</title>
+<meta name="description" content="Beantwoord zeven korte vragen en ontdek welke installateur het best bij jou past. Gratis en zonder verplichtingen.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;1,6..96,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@600&text=%E9%A6%99%E6%AA%80%E6%B2%89%E6%A1%82%E6%A2%85%E8%8E%B2%E8%8C%B6&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@500;700;800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --inkt:#14213A; --tekst:#14213A; --grijs:#5E6676; --lijn:#DFE2E8; --vlak:#EEF0F4;
+  --bg:#F6F5F1; --wit:#FFFFFF; --accent:#E5603A; --accent-donker:#C84C29; --zacht:#FCE9E2;
+  --groen:#1F7A55; --groen-zacht:#E3F2EA;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;scroll-behavior:smooth}
+body{margin:0;font-family:'Instrument Sans',system-ui,sans-serif;color:var(--tekst);background:var(--bg);line-height:1.55;font-size:16px}
+a{color:var(--inkt)}
+h1,h2,h3{font-family:'Schibsted Grotesk',system-ui,sans-serif;letter-spacing:-0.025em;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+[hidden]{display:none!important}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;height:54px;padding:0 26px;border-radius:12px;font:inherit;font-weight:600;font-size:16px;text-decoration:none;border:1.5px solid transparent;cursor:pointer;transition:background .2s,color .2s,border-color .2s}
+.btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{background:var(--accent-donker)}
+.btn-inkt{background:var(--inkt);color:#fff}.btn-inkt:hover{background:#0A1426}
+.btn-rand{border-color:#C9CED8;background:var(--wit);color:var(--inkt)}.btn-rand:hover{border-color:var(--inkt)}
+.btn-tekst{background:none;border:none;color:var(--grijs);padding:0 8px}.btn-tekst:hover{color:var(--inkt)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+
+header{border-bottom:1px solid var(--lijn);background:rgba(246,245,241,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);position:sticky;top:0;z-index:10}
+.header-rij{display:flex;align-items:center;justify-content:space-between;gap:16px;height:72px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:'Schibsted Grotesk',sans-serif;font-weight:800;font-size:21px;letter-spacing:-0.03em;color:var(--inkt)}
+.header-rij nav{display:flex;gap:24px;align-items:center;font-weight:500;font-size:15px}
+.header-rij nav a{text-decoration:none;color:var(--grijs)}.header-rij nav a:hover{color:var(--inkt)}
+
+.hero{padding:88px 0 72px}
+.hero-rij{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:64px;align-items:center}
+.label{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--accent-donker);background:var(--zacht);padding:6px 12px;border-radius:999px}
+.hero h1{font-size:clamp(44px,6vw,80px);line-height:.98;font-weight:800;margin:22px 0}
+.hero h1 span{color:var(--accent)}
+.hero p{font-size:19px;color:#3D4658;max-width:520px;margin:0 0 32px}
+.hero-knoppen{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.hero-klein{display:flex;flex-wrap:wrap;gap:8px 22px;margin-top:28px;font-size:14px;color:var(--grijs)}
+.hero-klein span{display:inline-flex;gap:8px;align-items:center}
+.voorproef{background:var(--wit);border:1px solid var(--lijn);border-radius:24px;padding:28px;box-shadow:0 30px 60px -30px rgba(20,33,58,.25);display:flex;flex-direction:column;gap:16px}
+.voorproef .vraag{font-family:'Schibsted Grotesk',sans-serif;font-weight:700;font-size:22px;letter-spacing:-0.02em}
+.voorproef .vb-opties{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.voorproef .vb-opties div{border:1.5px solid var(--lijn);border-radius:12px;padding:14px;font-weight:600;font-size:15px}
+.voorproef .vb-opties div.aan{border-color:var(--accent);background:var(--zacht)}
+.voorproef .vb-match{display:flex;align-items:center;gap:14px;background:var(--groen-zacht);border-radius:14px;padding:14px 16px}
+.voorproef .vb-match b{font-family:'Schibsted Grotesk',sans-serif;font-size:26px;color:var(--groen)}
+.voorproef .vb-match span{font-size:14px;color:#2E4A3D}
+
+.sectie{padding:96px 0;border-top:1px solid var(--lijn)}
+.sectie-kop{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:16px 40px;margin-bottom:44px}
+.sectie-kop h2{font-size:clamp(32px,4vw,52px);line-height:1.02;font-weight:800;max-width:640px}
+.sectie-kop p{margin:0;color:var(--grijs);max-width:400px}
+.stappen{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.stap{background:var(--wit);border:1px solid var(--lijn);border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:12px}
+.stap .nr{width:40px;height:40px;border-radius:12px;background:var(--inkt);color:#fff;font-family:'Schibsted Grotesk',sans-serif;font-weight:800;display:flex;align-items:center;justify-content:center}
+.stap h3{font-size:22px}
+.stap p{margin:0;color:var(--grijs)}
+.diensten{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.dienst{display:flex;align-items:center;gap:14px;background:var(--wit);border:1px solid var(--lijn);border-radius:16px;padding:18px;font:inherit;font-weight:600;color:var(--inkt);cursor:pointer;text-align:left;transition:border-color .2s}
+.dienst:hover{border-color:var(--inkt)}
+.icoon{width:44px;height:44px;border-radius:12px;background:var(--vlak);display:flex;align-items:center;justify-content:center;flex:0 0 auto}
+.installateur-cta{background:var(--inkt);color:#fff;border-radius:28px;padding:56px;display:flex;flex-wrap:wrap;gap:24px 48px;align-items:center;justify-content:space-between}
+.installateur-cta h2{font-size:clamp(28px,3.4vw,44px);line-height:1.05;max-width:560px}
+.installateur-cta p{margin:12px 0 0;color:#B8C1D3;max-width:520px}
+
+.quiz{min-height:calc(100vh - 72px);padding:40px 0 80px}
+.quiz-kaart{max-width:760px;margin:0 auto}
+.voortgang{display:flex;align-items:center;gap:16px;margin-bottom:40px}
+.voortgang .balk{flex:1;height:6px;background:var(--lijn);border-radius:3px;overflow:hidden}
+.voortgang .balk i{display:block;height:100%;background:var(--accent);transition:width .35s ease}
+.voortgang span{font-size:14px;color:var(--grijs);font-weight:500;white-space:nowrap}
+.quiz fieldset{border:none;margin:0;padding:0;min-width:0}
+.quiz legend{font-family:'Schibsted Grotesk',sans-serif;font-weight:800;font-size:clamp(28px,4vw,42px);line-height:1.08;letter-spacing:-0.025em;padding:0;margin-bottom:10px}
+.quiz .uitleg{color:var(--grijs);margin:0 0 28px;font-size:17px}
+.opties{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.opties.drie{grid-template-columns:repeat(3,minmax(0,1fr))}
+.optie{position:relative}
+.optie input{position:absolute;opacity:0;width:1px;height:1px}
+.optie label{display:flex;align-items:center;gap:14px;min-height:72px;padding:16px 18px;background:var(--wit);border:1.5px solid var(--lijn);border-radius:16px;cursor:pointer;font-weight:600;font-size:16px;transition:border-color .15s,background .15s}
+.optie label small{display:block;font-weight:400;color:var(--grijs);font-size:14px;margin-top:2px}
+.optie label:hover{border-color:#9AA3B5}
+.optie input:checked + label{border-color:var(--accent);background:var(--zacht)}
+.optie input:focus-visible + label{outline:3px solid rgba(229,96,58,.35);outline-offset:2px}
+.optie .icoon{width:40px;height:40px;border-radius:10px}
+.optie input:checked + label .icoon{background:#fff}
+.quiz-knoppen{display:flex;justify-content:space-between;align-items:center;margin-top:36px;gap:12px}
+
+.resultaten{padding:48px 0 96px}
+.resultaten-kop{max-width:760px;margin-bottom:32px}
+.resultaten-kop h1{font-size:clamp(34px,5vw,60px);line-height:1;font-weight:800;margin:16px 0 14px}
+.resultaten-kop p{color:var(--grijs);font-size:18px;margin:0}
+.samenvatting{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.samenvatting span{background:var(--wit);border:1px solid var(--lijn);border-radius:999px;padding:6px 12px;font-size:14px;font-weight:500}
+.demo-melding{background:#FFF7E6;border:1px solid #F3D9A4;color:#6A4A0C;border-radius:14px;padding:14px 18px;font-size:14px;margin-bottom:24px}
+.matches{display:flex;flex-direction:column;gap:16px}
+.match{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:24px;align-items:start;background:var(--wit);border:1px solid var(--lijn);border-radius:22px;padding:28px}
+.match.beste{border:2px solid var(--accent);box-shadow:0 24px 48px -28px rgba(229,96,58,.45)}
+.score{width:92px;height:92px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:conic-gradient(var(--groen) calc(var(--p) * 1%), var(--vlak) 0)}
+.score div{width:74px;height:74px;border-radius:50%;background:var(--wit);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score b{font-family:'Schibsted Grotesk',sans-serif;font-size:24px;line-height:1;color:var(--groen)}
+.score small{font-size:11px;color:var(--grijs);font-weight:600}
+.match-info{display:flex;flex-direction:column;gap:10px;min-width:0}
+.match-top{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--vlak);color:var(--inkt)}
+.badge.beste{background:var(--accent);color:#fff}
+.badge.demo{background:#FFF7E6;color:#6A4A0C}
+.match h2{font-size:26px}
+.match .plaats{color:var(--grijs);font-size:15px}
+.match .oms{margin:0;color:#3D4658}
+.feiten{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:14px;color:var(--grijs)}
+.feiten b{color:var(--inkt);font-weight:600}
+.redenen{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 20px}
+.redenen li{display:flex;gap:8px;align-items:flex-start;font-size:15px}
+.redenen li svg{flex:0 0 auto;margin-top:3px}
+.redenen li.min{color:var(--grijs)}
+.match-acties{display:flex;flex-direction:column;gap:10px;min-width:190px}
+.geen-match{background:var(--wit);border:1px solid var(--lijn);border-radius:22px;padding:48px;text-align:center;display:flex;flex-direction:column;gap:14px;align-items:center}
+
+dialog{border:none;border-radius:24px;padding:0;max-width:560px;width:calc(100% - 32px);box-shadow:0 40px 80px -20px rgba(20,33,58,.4);color:var(--inkt)}
+dialog::backdrop{background:rgba(20,33,58,.5)}
+.dlg{padding:32px;display:flex;flex-direction:column;gap:18px}
+.dlg h2{font-size:28px}
+.dlg p{margin:0;color:var(--grijs)}
+.velden{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.velden .breed{grid-column:1/-1}
+.velden label{display:block;font-weight:600;font-size:14px;margin-bottom:6px}
+.velden input,.velden textarea{width:100%;height:48px;padding:0 14px;border:1.5px solid #C9CED8;border-radius:12px;font:inherit;font-size:16px;background:#fff;color:var(--inkt)}
+.velden textarea{height:92px;padding:12px 14px;resize:vertical}
+.velden input:focus,.velden textarea:focus{outline:none;border-color:var(--inkt)}
+.dlg-knoppen{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}
+.foutje{color:#B42318;font-weight:600;font-size:14px;margin:0}
+.foutje:empty{display:none}
+
+footer{border-top:1px solid var(--lijn);padding:40px 0;color:var(--grijs);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+
+@media (max-width:900px){
+  .hero-rij{grid-template-columns:1fr;gap:40px}
+  .hero{padding:56px 0}
+  .stappen{grid-template-columns:1fr}
+  .diensten{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .match{grid-template-columns:auto minmax(0,1fr)}
+  .match-acties{grid-column:1/-1;flex-direction:row;flex-wrap:wrap;min-width:0}
+  .match-acties .btn{flex:1 1 200px}
+  .installateur-cta{padding:36px}
+}
+@media (max-width:600px){
+  .wrap{padding:0 16px}
+  .header-rij nav a{display:none}
+  .opties,.opties.drie{grid-template-columns:1fr}
+  .diensten{grid-template-columns:1fr}
+  .redenen{grid-template-columns:1fr}
+  .match{padding:20px;gap:16px}
+  .score{width:72px;height:72px}.score div{width:58px;height:58px}.score b{font-size:19px}
+  .velden{grid-template-columns:1fr}
+  .sectie{padding:72px 0}
+  .voorproef .vb-opties{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-<div id="kop"></div>
 
-<main>
-  <!-- Hero -->
+<header>
+  <div class="wrap header-rij">
+    <a href="./" class="logo" aria-label="Installatiekompas, naar de homepage">
+      <svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="15" fill="#14213A"/><path d="M16 6l4 10h-8z" fill="#E5603A"/><path d="M12 16h8l-4 10z" fill="#FFFFFF"/><circle cx="16" cy="16" r="2" fill="#14213A"/></svg>
+      Installatiekompas
+    </a>
+    <nav aria-label="Hoofdmenu">
+      <a href="#hoe">Hoe het werkt</a>
+      <a href="#installateurs">Voor installateurs</a>
+      <button type="button" class="btn btn-accent" data-start style="height:44px;padding:0 18px;font-size:15px">Start de test</button>
+    </nav>
+  </div>
+</header>
+
+<!-- ========== LANDINGSPAGINA ========== -->
+<main id="landing">
   <section class="hero">
     <div class="wrap hero-rij">
-      <div class="hero-tekst">
-        <div class="label-klein">Collectie 2026 · Xiāng, 香, betekent geur</div>
-        <h1 class="display">Geur,<br><i>als</i> ritueel.</h1>
-        <div class="hero-onder">
-          <p>Handgemaakte wierook, branders en thee uit China. Het eeuwenoude geurritueel waarmee jong China weer tot rust komt. Nu ook hier.</p>
-          <div class="knoppen">
-            <a href="#producten" class="btn btn-inkt">Ontdek de collectie</a>
-            <a href="#geuren" class="btn btn-rand">De geuren</a>
-          </div>
+      <div>
+        <span class="label">Gratis · 2 minuten · zonder verplichtingen</span>
+        <h1>Vind de installateur die <span>bij jou past.</span></h1>
+        <p>Er zijn duizenden installateurs in Nederland. Beantwoord zeven korte vragen en zie direct welke drie het best passen bij jouw klus, je woning en je wensen.</p>
+        <div class="hero-knoppen">
+          <button type="button" class="btn btn-accent" data-start>Start de vragenlijst
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <a href="#hoe" class="btn btn-rand">Hoe werkt het?</a>
+        </div>
+        <div class="hero-klein">
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F7A55" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Persoonlijke match</span>
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F7A55" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Je ziet waarom ze passen</span>
+          <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1F7A55" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"/></svg>Direct een offerte aanvragen</span>
         </div>
       </div>
-      <div class="hero-beeld">
-        <div class="ph">[Foto: rook van een wierookstokje boven een keramische brander]</div>
-        <div class="hero-tag"><span class="zegel" aria-hidden="true">香</span><div><b>Tien minuten stilte</b><span>Zo lang brandt één stokje</span></div></div>
+      <div class="voorproef" aria-hidden="true">
+        <div class="voortgang" style="margin:0"><div class="balk"><i style="width:43%"></i></div><span>Vraag 4 van 7</span></div>
+        <div class="vraag">Wat vind je het belangrijkst?</div>
+        <div class="vb-opties">
+          <div>Een scherpe prijs</div>
+          <div class="aan">Topkwaliteit</div>
+          <div>Snel geholpen</div>
+          <div>Een lokaal bedrijf</div>
+        </div>
+        <div class="vb-match"><b>94%</b><span>match met een erkende installateur uit jouw provincie</span></div>
       </div>
     </div>
   </section>
 
-  <!-- Voordelen -->
-  <section class="usps" aria-label="Voordelen">
-    <div class="wrap grid-usp">
-      <div class="usp"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3c2 3 2 5 0 7s-2 4 0 7"/><path d="M8 21h8"/></svg><div><b>Natuurlijke grondstoffen</b><small>Hout, kruiden en harsen</small></div></div>
-      <div class="usp"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 20c-2-4-2-9 5-16 7 7 7 12 5 16"/><path d="M12 4v16"/></svg><div><b>Met de hand gemaakt</b><small>In kleine oplages</small></div></div>
-      <div class="usp"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="8" width="18" height="13"/><path d="M12 8v13M3 12h18M12 8c-2-4-6-4-6-1.5S10 8 12 8c2 0 6 0 6-1.5S14 4 12 8z"/></svg><div><b>Mooi verpakt</b><small>Klaar om te geven</small></div></div>
-      <div class="usp"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7h11v9H3z"/><path d="M14 10h4l3 3v3h-7"/><circle cx="7" cy="18" r="1.6"/><circle cx="17" cy="18" r="1.6"/></svg><div><b>Gratis verzending</b><small>Vanaf [BEDRAG]</small></div></div>
-    </div>
-  </section>
-
-  <!-- Ritueel -->
-  <section class="wrap sectie">
-    <div class="sectie-kop">
-      <div><div class="boven">Het ritueel</div><h2 class="display">Drie stappen<br>naar <i>stilte.</i></h2></div>
-      <p>In China is het branden van wierook al eeuwen een moment van rust. Nu ontdekt een nieuwe generatie het opnieuw, als pauze in een druk bestaan.</p>
-    </div>
-    <div class="grid-ritueel">
-      <div class="stap"><span class="nr">i.</span><h3>Kies je geur</h3><p>Warm sandelhout voor de avond, fris theearoma voor de ochtend. Elke geur heeft zijn eigen moment.</p></div>
-      <div class="stap"><span class="nr">ii.</span><h3>Steek aan</h3><p>Laat de vlam even branden en blaas hem uit. Zet het stokje in de brander en kijk hoe de rook opstijgt.</p></div>
-      <div class="stap"><span class="nr">iii.</span><h3>Adem</h3><p>Leg je telefoon weg. Eén stokje brandt ongeveer zo lang als een korte meditatie.</p></div>
-    </div>
-  </section>
-
-  <!-- Categorieën -->
-  <section class="wrap sectie" id="categorieen">
-    <div class="sectie-kop">
-      <div><div class="boven">De collectie</div><h2 class="display">Alles voor<br>het <i>ritueel.</i></h2></div>
-      <a href="#producten">Bekijk alles</a>
-    </div>
-    <div class="grid-cat" id="catGrid"></div>
-  </section>
-
-  <!-- Geurfamilies -->
-  <section class="sectie geuren" id="geuren">
+  <section class="sectie" id="hoe">
     <div class="wrap">
       <div class="sectie-kop">
-        <div><div class="boven">Geurfamilies</div><h2 class="display">Zes klassieke<br><i>geuren.</i></h2></div>
-        <p>De bouwstenen van Chinese geurkunst. Al eeuwen gebruikt, en nu weer volop te ontdekken.</p>
+        <h2>In drie stappen naar de juiste vakman.</h2>
+        <p>Geen eindeloze lijsten met bedrijven. Je ziet alleen de installateurs die echt bij je passen.</p>
       </div>
-      <div class="grid-geur">
-        <a class="geur" href="./?zoek=sandelhout#producten" style="text-decoration:none"><span class="han" aria-hidden="true">檀</span><h3>Sandelhout</h3><span class="noten">Warm · romig · houtig</span><p>De bekendste wierookgeur. Zacht en kalmerend, ideaal voor de avond.</p></a>
-        <a class="geur" href="./?zoek=agarhout#producten" style="text-decoration:none"><span class="han" aria-hidden="true">沉</span><h3>Agarhout</h3><span class="noten">Diep · harsig · kostbaar</span><p>Ook bekend als oud. Een van de zeldzaamste en duurste geurstoffen ter wereld.</p></a>
-        <a class="geur" href="./?zoek=osmanthus#producten" style="text-decoration:none"><span class="han" aria-hidden="true">桂</span><h3>Osmanthus</h3><span class="noten">Zoet · fruitig · bloemig</span><p>De geur van de Chinese herfst, met een tikje abrikoos.</p></a>
-        <a class="geur" href="./?zoek=pruimenbloesem#producten" style="text-decoration:none"><span class="han" aria-hidden="true">梅</span><h3>Pruimenbloesem</h3><span class="noten">Licht · fris · poederig</span><p>Bloeit midden in de winter. Een frisse, heldere geur.</p></a>
-        <a class="geur" href="./?zoek=lotus#producten" style="text-decoration:none"><span class="han" aria-hidden="true">莲</span><h3>Lotus</h3><span class="noten">Zacht · groen · waterig</span><p>Rustig en schoon. Een geur voor meditatie en concentratie.</p></a>
-        <a class="geur" href="./?zoek=thee#producten" style="text-decoration:none"><span class="han" aria-hidden="true">茶</span><h3>Thee</h3><span class="noten">Groen · fris · helder</span><p>Geïnspireerd op Chinese thee. Een fijne, opfrissende geur voor overdag.</p></a>
+      <div class="stappen">
+        <div class="stap"><span class="nr">1</span><h3>Beantwoord de vragen</h3><p>Wat moet er gebeuren, waar woon je en wat vind je belangrijk? Het kost je maar twee minuten.</p></div>
+        <div class="stap"><span class="nr">2</span><h3>Bekijk je matches</h3><p>Je ziet de drie installateurs die het best passen, met een matchscore en de redenen waarom.</p></div>
+        <div class="stap"><span class="nr">3</span><h3>Vraag een offerte aan</h3><p>Met één klik vraag je een vrijblijvende offerte aan bij de installateur van jouw keuze.</p></div>
       </div>
     </div>
   </section>
 
-  <!-- Manifest -->
-  <section class="sectie manifest">
+  <section class="sectie">
     <div class="wrap">
-      <span class="zegel" aria-hidden="true">香</span>
-      <blockquote>
-        In China branden jonge mensen weer wierook. Niet uit traditie, maar om <i>even niets</i> te hoeven.
-        <cite>De Chinese geur- en aromatherapiemarkt was in 2024 al 27,8 miljard yuan waard</cite>
-      </blockquote>
+      <div class="sectie-kop">
+        <h2>Waar zoek je een installateur voor?</h2>
+        <p>Kies je klus en begin meteen.</p>
+      </div>
+      <div class="diensten" id="dienstenLijst"></div>
     </div>
   </section>
 
-  <!-- Producten -->
-  <section class="wrap sectie" id="producten">
-    <div class="sectie-kop">
-      <div><div class="boven" id="prodBoven">Nieuw</div><h2 class="display" id="prodTitel">De <i>collectie.</i></h2></div>
-      <a href="./#producten" id="prodAlles">Alles bekijken</a>
-    </div>
-    <div class="grid-prod" id="productlijst"></div>
-  </section>
-
-  <!-- Nieuwsbrief -->
-  <section class="wrap sectie" style="border-bottom:none">
-    <div class="nieuws-blok">
-      <div><div class="boven">Nieuwsbrief</div><h2 class="display">Als eerste<br><i>ruiken</i> wat er komt.</h2></div>
-      <form class="nieuws-form" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Bedankt';">
-        <label for="mail" class="sr-only">E-mailadres</label>
-        <input id="mail" type="email" placeholder="Je e-mailadres" required>
-        <button type="submit">Aanmelden</button>
-      </form>
+  <section class="sectie" id="installateurs">
+    <div class="wrap">
+      <div class="installateur-cta">
+        <div>
+          <h2>Ben jij installateur? Krijg klanten die écht bij je passen.</h2>
+          <p>Meld je bedrijf aan en ontvang aanvragen van mensen die precies zoeken wat jij biedt, in jouw regio.</p>
+        </div>
+        <a href="mailto:[JOUW@EMAIL.NL]?subject=Aanmelden%20als%20installateur" class="btn btn-accent">Meld je bedrijf aan</a>
+      </div>
     </div>
   </section>
 </main>
 
-<div id="voet"></div>
+<!-- ========== VRAGENLIJST ========== -->
+<main id="quiz" class="quiz" hidden>
+  <div class="wrap">
+    <div class="quiz-kaart">
+      <div class="voortgang"><div class="balk"><i id="balk"></i></div><span id="teller"></span></div>
+      <form id="vraagForm" novalidate>
+        <div id="vraag"></div>
+        <div class="quiz-knoppen">
+          <button type="button" class="btn btn-tekst" id="terug">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg> Terug</button>
+          <button type="submit" class="btn btn-inkt" id="verder" disabled>Volgende</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
 
-<script src="shop.js"></script>
+<!-- ========== RESULTATEN ========== -->
+<main id="uitslag" class="resultaten" hidden>
+  <div class="wrap">
+    <div class="resultaten-kop">
+      <span class="label">Jouw resultaat</span>
+      <h1 id="uitslagTitel">Dit zijn jouw beste matches.</h1>
+      <p id="uitslagTekst"></p>
+      <div class="samenvatting" id="samenvatting"></div>
+    </div>
+    <div class="demo-melding" id="demoMelding" hidden>Let op: dit zijn <b>voorbeeldprofielen</b> om te laten zien hoe de tool werkt. Het zijn geen echte bedrijven.</div>
+    <div class="matches" id="matches"></div>
+    <div style="margin-top:28px">
+      <button type="button" class="btn btn-rand" id="opnieuw">Opnieuw beginnen</button>
+    </div>
+  </div>
+</main>
+
+<!-- ========== OFFERTE ========== -->
+<dialog id="offerte" aria-labelledby="offerteTitel">
+  <form class="dlg" id="offerteForm" novalidate>
+    <h2 id="offerteTitel">Offerte aanvragen</h2>
+    <p id="offerteSub"></p>
+    <div class="velden">
+      <div><label for="o-naam">Naam *</label><input id="o-naam" name="naam" required autocomplete="name"></div>
+      <div><label for="o-tel">Telefoon *</label><input id="o-tel" name="telefoon" type="tel" required autocomplete="tel"></div>
+      <div class="breed"><label for="o-mail">E-mailadres *</label><input id="o-mail" name="email" type="email" required autocomplete="email"></div>
+      <div><label for="o-postcode">Postcode *</label><input id="o-postcode" name="postcode" required autocomplete="postal-code"></div>
+      <div><label for="o-huisnr">Huisnummer</label><input id="o-huisnr" name="huisnummer"></div>
+      <div class="breed"><label for="o-bericht">Toelichting (optioneel)</label><textarea id="o-bericht" name="bericht" placeholder="Bijvoorbeeld het bouwjaar van je woning, of je vragen"></textarea></div>
+    </div>
+    <p class="foutje" id="offerteFout" role="alert"></p>
+    <div class="dlg-knoppen">
+      <button type="button" class="btn btn-rand" id="offerteSluit">Annuleren</button>
+      <button type="submit" class="btn btn-accent" id="offerteVerstuur">Verstuur aanvraag</button>
+    </div>
+  </form>
+</dialog>
+
+<footer><div class="wrap"><span>© 2026 Installatiekompas</span><span>Privacy · Voorwaarden</span></div></footer>
+
 <script>
-// Categorieën
-document.getElementById('catGrid').innerHTML = CATEGORIEEN.map(c => `
-  <a class="cat" href="./?categorie=${encodeURIComponent(c.naam)}#producten">
-    <div class="ph">[Foto: ${esc(c.naam.toLowerCase())}]</div>
-    <div><span class="naam">${esc(c.naam)}</span><small>${esc(c.sub)}</small></div>
-  </a>`).join('');
+// ===== Instellingen =====
+const CONFIG = {
+  // Formspree-adres voor offerteaanvragen, bijv. 'https://formspree.io/f/abcdwxyz'
+  aanvraagFormulier: ''
+};
 
-// Producten, met filter op categorie of zoekterm
-(async () => {
-  const params = new URLSearchParams(location.search);
-  const categorie = params.get('categorie');
-  const zoek = (params.get('zoek') || '').trim().toLowerCase();
-  let lijst = await laadProducten();
-  if (categorie) {
-    lijst = lijst.filter(p => p.categorie === categorie);
-    document.getElementById('prodBoven').textContent = 'Collectie';
-    document.getElementById('prodTitel').textContent = categorie;
+// ===== Iconen =====
+const IC = {
+  warmtepomp: '<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="10" cy="12" r="3"/><path d="M17 9v6"/>',
+  zonnepanelen: '<path d="M3 18l3-10h12l3 10z"/><path d="M9 8l-1 10M15 8l1 10M4.5 13h15"/>',
+  thuisbatterij: '<rect x="6" y="4" width="12" height="17" rx="2"/><path d="M10 2h4M12 9l-2 4h4l-2 4"/>',
+  'cv-ketel': '<rect x="6" y="3" width="12" height="18" rx="2"/><path d="M12 8c1.5 1.5 1.5 3 0 4.5s-1.5 3 0 4.5"/>',
+  laadpaal: '<rect x="5" y="3" width="10" height="18" rx="2"/><path d="M15 8h2a2 2 0 0 1 2 2v5a2 2 0 0 0 2 2M10.5 8l-2 4h4l-2 4"/>',
+  airco: '<rect x="3" y="5" width="18" height="8" rx="2"/><path d="M7 17c0 1.5 1 2 1 3M12 17v3M17 17c0 1.5-1 2-1 3"/>',
+  elektra: '<path d="M13 2L5 14h6l-1 8 8-12h-6z"/>',
+  sanitair: '<path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11z"/>',
+  huis: '<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
+  rij: '<path d="M2 20V9l5-4 5 4 5-4 5 4v11"/><path d="M2 20h20"/>',
+  vrij: '<path d="M4 11l8-6 8 6"/><path d="M6 10v10h12V10"/><path d="M10 20v-5h4v5"/>',
+  appartement: '<rect x="5" y="3" width="14" height="18"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2"/>',
+  bedrijf: '<path d="M3 21V9l6-4v4l6-4v4l6-4v16z"/>',
+  euro: '<path d="M17 6a7 7 0 1 0 0 12M4 10h10M4 14h10"/>',
+  ster: '<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>',
+  klok: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  pin: '<path d="M12 21s-7-6-7-11a7 7 0 0 1 14 0c0 5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>',
+  vink: '<path d="M5 12l5 5L20 7"/>',
+  schild: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  vraag: '<circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17h.01"/>',
+  nee: '<circle cx="12" cy="12" r="9"/><path d="M8 12h8"/>'
+};
+const icoon = (n, kleur = 'currentColor', maat = 22) => `<svg width="${maat}" height="${maat}" viewBox="0 0 24 24" fill="none" stroke="${kleur}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[n] || ''}</svg>`;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $ = id => document.getElementById(id);
+
+// ===== De vragen =====
+const DIENSTEN = [
+  { waarde: 'warmtepomp', label: 'Warmtepomp', sub: 'Hybride of volledig elektrisch' },
+  { waarde: 'zonnepanelen', label: 'Zonnepanelen', sub: 'Nieuw of uitbreiden' },
+  { waarde: 'thuisbatterij', label: 'Thuisbatterij', sub: 'Stroom opslaan' },
+  { waarde: 'cv-ketel', label: 'Cv-ketel', sub: 'Vervangen of onderhoud' },
+  { waarde: 'laadpaal', label: 'Laadpaal', sub: 'Voor je elektrische auto' },
+  { waarde: 'airco', label: 'Airco', sub: 'Koelen en verwarmen' },
+  { waarde: 'elektra', label: 'Elektra', sub: 'Groepenkast, stopcontacten' },
+  { waarde: 'sanitair', label: 'Loodgieter', sub: 'Badkamer, lekkage, leidingen' }
+];
+const PROVINCIES = ['Groningen', 'Friesland', 'Drenthe', 'Overijssel', 'Flevoland', 'Gelderland', 'Utrecht', 'Noord-Holland', 'Zuid-Holland', 'Zeeland', 'Noord-Brabant', 'Limburg'];
+
+const VRAGEN = [
+  { id: 'dienst', titel: 'Waar heb je een installateur voor nodig?', uitleg: 'Kies de klus die je wilt laten doen.',
+    opties: DIENSTEN.map(d => ({ waarde: d.waarde, label: d.label, sub: d.sub, icoon: d.waarde })) },
+  { id: 'provincie', titel: 'In welke provincie woon je?', uitleg: 'Zo vinden we installateurs die bij jou in de buurt werken.', drie: true,
+    opties: PROVINCIES.map(p => ({ waarde: p, label: p })) },
+  { id: 'woning', titel: 'In wat voor pand moet het gebeuren?', uitleg: 'Elk type woning vraagt om een andere aanpak.',
+    opties: [
+      { waarde: 'rijtjeshuis', label: 'Rijtjeshuis', icoon: 'rij' },
+      { waarde: 'twee-onder-een-kap', label: 'Twee-onder-een-kap', icoon: 'huis' },
+      { waarde: 'vrijstaand', label: 'Vrijstaande woning', icoon: 'vrij' },
+      { waarde: 'appartement', label: 'Appartement', icoon: 'appartement' },
+      { waarde: 'bedrijf', label: 'Bedrijfspand', icoon: 'bedrijf' }
+    ] },
+  { id: 'prioriteit', titel: 'Wat vind je het belangrijkst?', uitleg: 'Kies wat voor jou de doorslag geeft.',
+    opties: [
+      { waarde: 'prijs', label: 'Een scherpe prijs', sub: 'Waar voor je geld', icoon: 'euro' },
+      { waarde: 'kwaliteit', label: 'Topkwaliteit', sub: 'Goede reviews en lange garantie', icoon: 'ster' },
+      { waarde: 'snel', label: 'Snel geholpen', sub: 'Zo snel mogelijk aan de slag', icoon: 'klok' },
+      { waarde: 'lokaal', label: 'Een lokaal bedrijf', sub: 'Persoonlijk en dichtbij', icoon: 'pin' }
+    ] },
+  { id: 'wanneer', titel: 'Wanneer wil je dat het klaar is?', uitleg: 'Zo weten we hoe belangrijk beschikbaarheid is.',
+    opties: [
+      { waarde: 'spoed', label: 'Zo snel mogelijk', sub: 'Binnen twee weken', icoon: 'klok' },
+      { waarde: 'maanden', label: 'Binnen 1 tot 3 maanden', icoon: 'klok' },
+      { waarde: 'orienteren', label: 'Ik ben nog aan het oriënteren', icoon: 'vraag' }
+    ] },
+  { id: 'keurmerk', titel: 'Moet de installateur erkend zijn?', uitleg: 'Een erkend bedrijf voldoet aan de eisen van een brancheorganisatie of keurmerk.',
+    opties: [
+      { waarde: 'ja', label: 'Ja, dat vind ik belangrijk', icoon: 'schild' },
+      { waarde: 'nee', label: 'Maakt me niet uit', icoon: 'nee' }
+    ] },
+  { id: 'subsidie', titel: 'Wil je hulp bij het aanvragen van subsidie?', uitleg: 'Voor bijvoorbeeld een warmtepomp kun je vaak subsidie krijgen.',
+    opties: [
+      { waarde: 'ja', label: 'Ja, graag', icoon: 'euro' },
+      { waarde: 'nee', label: 'Nee, niet nodig', icoon: 'nee' }
+    ] }
+];
+
+// ===== Toestand =====
+let stap = 0;
+const antwoorden = {};
+let gekozenInstallateur = null;
+const installateursLaden = fetch('installateurs.json?v=' + Date.now(), { cache: 'no-store' })
+  .then(r => r.ok ? r.json() : []).catch(() => []).then(d => Array.isArray(d) ? d : []);
+
+function toon(scherm) {
+  ['landing', 'quiz', 'uitslag'].forEach(s => { $(s).hidden = s !== scherm; });
+  window.scrollTo({ top: 0 });
+}
+
+// ===== Vragenlijst =====
+let toetsenbord = false;
+function toonVraag() {
+  const v = VRAGEN[stap];
+  $('balk').style.width = (stap / VRAGEN.length * 100) + '%';
+  $('teller').textContent = `Vraag ${stap + 1} van ${VRAGEN.length}`;
+  $('vraag').innerHTML = `
+    <fieldset>
+      <legend>${esc(v.titel)}</legend>
+      <p class="uitleg">${esc(v.uitleg)}</p>
+      <div class="opties ${v.drie ? 'drie' : ''}">
+        ${v.opties.map((o, i) => `
+          <div class="optie">
+            <input type="radio" name="${v.id}" id="o-${v.id}-${i}" value="${esc(o.waarde)}" ${antwoorden[v.id] === o.waarde ? 'checked' : ''}>
+            <label for="o-${v.id}-${i}">${o.icoon ? `<span class="icoon">${icoon(o.icoon)}</span>` : ''}<span>${esc(o.label)}${o.sub ? `<small>${esc(o.sub)}</small>` : ''}</span></label>
+          </div>`).join('')}
+      </div>
+    </fieldset>`;
+  $('verder').disabled = !antwoorden[v.id];
+  $('verder').textContent = stap === VRAGEN.length - 1 ? 'Toon mijn matches' : 'Volgende';
+}
+
+// Met muis of vinger: na een keuze automatisch door. Met het toetsenbord: zelf op Volgende drukken.
+$('vraagForm').addEventListener('keydown', () => { toetsenbord = true; });
+$('vraagForm').addEventListener('pointerdown', () => { toetsenbord = false; });
+$('vraagForm').addEventListener('change', e => {
+  if (e.target.type !== 'radio') return;
+  antwoorden[VRAGEN[stap].id] = e.target.value;
+  $('verder').disabled = false;
+  if (!toetsenbord) setTimeout(volgende, 260);
+});
+$('vraagForm').addEventListener('submit', e => { e.preventDefault(); volgende(); });
+
+function volgende() {
+  if (!antwoorden[VRAGEN[stap].id]) return;
+  if (stap < VRAGEN.length - 1) { stap++; toonVraag(); window.scrollTo({ top: 0 }); }
+  else toonUitslag();
+}
+$('terug').addEventListener('click', () => {
+  if (stap === 0) { toon('landing'); return; }
+  stap--; toonVraag();
+});
+
+function startQuiz(dienst) {
+  stap = 0;
+  Object.keys(antwoorden).forEach(k => delete antwoorden[k]);
+  if (dienst) { antwoorden.dienst = dienst; stap = 1; }
+  toon('quiz'); toonVraag();
+}
+document.querySelectorAll('[data-start]').forEach(b => b.addEventListener('click', () => startQuiz()));
+$('opnieuw').addEventListener('click', () => startQuiz());
+
+$('dienstenLijst').innerHTML = DIENSTEN.map(d => `
+  <button type="button" class="dienst" data-dienst="${d.waarde}"><span class="icoon">${icoon(d.waarde)}</span><span>${esc(d.label)}</span></button>`).join('');
+$('dienstenLijst').addEventListener('click', e => { const b = e.target.closest('[data-dienst]'); if (b) startQuiz(b.dataset.dienst); });
+
+// ===== Matching =====
+// Elke installateur krijgt een score tussen 0 en 1. Hij moet de gevraagde klus doen.
+function beoordeel(i, a) {
+  const redenen = [];
+  const minpunten = [];
+  const landelijk = (i.provincies || []).includes('Heel Nederland');
+  const inProvincie = (i.provincies || []).includes(a.provincie);
+
+  const regio = inProvincie ? 1 : landelijk ? 0.7 : 0;
+  if (inProvincie) redenen.push(`Werkt in ${a.provincie}`);
+  else if (landelijk) redenen.push('Werkt in heel Nederland');
+  else minpunten.push(`Werkt niet in ${a.provincie}`);
+
+  const prijs = (3 - (i.prijsniveau || 2)) / 2;
+  const snel = Math.max(0, 1 - ((i.startBinnenWeken || 4) - 1) / 7);
+  const kwaliteit = Math.max(0, ((i.beoordeling || 4) - 3.5) / 1.5) * 0.6 + Math.min(1, (i.garantieJaren || 2) / 10) * 0.4;
+  const lokaal = i.lokaal && inProvincie ? 1 : inProvincie ? 0.5 : 0;
+
+  const w = { regio: 3, prijs: 1, snel: 1, kwaliteit: 1, lokaal: 0.5 };
+  w[a.prioriteit] += 3;
+  if (a.wanneer === 'spoed') w.snel += 2;
+  if (a.wanneer === 'maanden') w.snel += 0.5;
+
+  let som = w.regio * regio + w.prijs * prijs + w.snel * snel + w.kwaliteit * kwaliteit + w.lokaal * lokaal;
+  let max = w.regio + w.prijs + w.snel + w.kwaliteit + w.lokaal;
+
+  if (a.keurmerk === 'ja') { max += 2; if (i.keurmerk) { som += 2; redenen.push('Erkend installateur'); } else minpunten.push('Niet erkend'); }
+  if (a.subsidie === 'ja') { max += 1.5; if (i.subsidiehulp) { som += 1.5; redenen.push('Helpt met je subsidieaanvraag'); } else minpunten.push('Geen hulp bij subsidie'); }
+  if (a.woning === 'bedrijf') { max += 1.5; if (i.zakelijk) { som += 1.5; redenen.push('Ervaring met bedrijfspanden'); } else minpunten.push('Werkt vooral voor particulieren'); }
+
+  if (a.prioriteit === 'prijs' && prijs === 1) redenen.push('Scherp geprijsd');
+  if (a.prioriteit === 'prijs' && prijs === 0) minpunten.push('In het hogere prijssegment');
+  if (a.prioriteit === 'kwaliteit' && (i.beoordeling || 0) >= 4.6) redenen.push(`Sterke beoordeling (${String(i.beoordeling).replace('.', ',')})`);
+  if (a.prioriteit === 'kwaliteit' && (i.garantieJaren || 0) >= 7) redenen.push(`${i.garantieJaren} jaar garantie`);
+  if ((a.prioriteit === 'snel' || a.wanneer === 'spoed') && (i.startBinnenWeken || 9) <= 2) redenen.push(i.startBinnenWeken <= 1 ? 'Kan deze week nog starten' : 'Kan binnen 2 weken starten');
+  if ((a.prioriteit === 'snel' || a.wanneer === 'spoed') && (i.startBinnenWeken || 0) > 4) minpunten.push(`Start pas over ${i.startBinnenWeken} weken`);
+  if (a.prioriteit === 'lokaal' && lokaal === 1) redenen.push('Lokaal bedrijf uit de regio');
+
+  return { i, score: som / max, regio, redenen: [...new Set(redenen)], minpunten: [...new Set(minpunten)] };
+}
+
+async function toonUitslag() {
+  const installateurs = await installateursLaden;
+  const a = antwoorden;
+  const dienst = DIENSTEN.find(d => d.waarde === a.dienst);
+  const klus = (dienst?.label || '').toLowerCase();
+  const kandidaten = installateurs.filter(i => (i.diensten || []).includes(a.dienst)).map(i => beoordeel(i, a));
+  const inRegio = kandidaten.filter(k => k.regio > 0).sort((x, y) => y.score - x.score);
+  const buiten = kandidaten.filter(k => k.regio === 0).sort((x, y) => y.score - x.score);
+  const top = (inRegio.length ? inRegio : buiten).slice(0, 3);
+
+  const label = (n, w) => VRAGEN[n].opties.find(o => o.waarde === w)?.label;
+  $('samenvatting').innerHTML = [dienst?.label, a.provincie, label(2, a.woning), label(3, a.prioriteit), label(4, a.wanneer)]
+    .filter(Boolean).map(t => `<span>${esc(t)}</span>`).join('');
+  $('demoMelding').hidden = !top.some(k => k.i.demo);
+
+  if (!top.length) {
+    $('uitslagTitel').textContent = 'We hebben nog geen match voor je.';
+    $('uitslagTekst').textContent = `Er is nog geen installateur voor ${klus} aangesloten. We breiden ons netwerk snel uit.`;
+    $('matches').innerHTML = '';
+    toon('uitslag'); return;
   }
-  if (zoek) {
-    lijst = lijst.filter(p => `${p.naam} ${merkVan(p)} ${p.omschrijving || ''} ${p.categorie || ''} ${(p.specificaties || []).map(s => s.waarde).join(' ')}`.toLowerCase().includes(zoek));
-    document.getElementById('prodBoven').textContent = 'Zoeken';
-    document.getElementById('prodTitel').textContent = '"' + params.get('zoek') + '"';
-    const veld = document.getElementById('zoek'); if (veld) veld.value = params.get('zoek');
+  $('uitslagTitel').textContent = inRegio.length ? 'Dit zijn jouw beste matches.' : 'Nog niemand in jouw provincie.';
+  $('uitslagTekst').textContent = inRegio.length
+    ? `We hebben ${kandidaten.length} ${kandidaten.length === 1 ? 'installateur' : 'installateurs'} voor ${klus} vergeleken. ${top.length === 1 ? 'Deze past' : `Deze ${top.length} passen`} het best bij jouw antwoorden.`
+    : `Er werkt nog geen installateur voor ${klus} in ${a.provincie}. Dit zijn de beste opties daarbuiten.`;
+
+  const VINK = icoon('vink', '#1F7A55', 18);
+  const MIN = icoon('nee', '#9AA3B5', 18);
+  $('matches').innerHTML = top.map((k, n) => {
+    const pct = Math.round(55 + k.score * 44);
+    const i = k.i;
+    const niveau = Math.min(3, Math.max(1, i.prijsniveau || 2));
+    return `
+    <article class="match ${n === 0 ? 'beste' : ''}">
+      <div class="score" style="--p:${pct}" role="img" aria-label="${pct} procent match"><div><b>${pct}%</b><small>match</small></div></div>
+      <div class="match-info">
+        <div class="match-top">
+          ${n === 0 ? '<span class="badge beste">Beste match</span>' : ''}
+          ${i.keurmerk ? `<span class="badge">${icoon('schild', 'currentColor', 14)} Erkend</span>` : ''}
+          ${i.demo ? '<span class="badge demo">Voorbeeldprofiel</span>' : ''}
+        </div>
+        <h2>${esc(i.naam)}</h2>
+        <div class="plaats">${esc(i.plaats)} · ${esc((i.provincies || []).join(', '))}</div>
+        ${i.omschrijving ? `<p class="oms">${esc(i.omschrijving)}</p>` : ''}
+        <div class="feiten">
+          <span>Beoordeling <b>${esc(String(i.beoordeling ?? '–').replace('.', ','))}</b>/5</span>
+          <span>Start binnen <b>${esc(i.startBinnenWeken)} ${i.startBinnenWeken === 1 ? 'week' : 'weken'}</b></span>
+          <span>Garantie <b>${esc(i.garantieJaren)} jaar</b></span>
+          <span>Prijs <b>${'€'.repeat(niveau)}</b><span style="opacity:.35">${'€'.repeat(3 - niveau)}</span></span>
+        </div>
+        <ul class="redenen">
+          ${k.redenen.slice(0, 6).map(r => `<li>${VINK}<span>${esc(r)}</span></li>`).join('')}
+          ${k.minpunten.slice(0, 2).map(r => `<li class="min">${MIN}<span>${esc(r)}</span></li>`).join('')}
+        </ul>
+      </div>
+      <div class="match-acties">
+        <button type="button" class="btn ${n === 0 ? 'btn-accent' : 'btn-inkt'}" data-offerte="${esc(i.id)}">Offerte aanvragen</button>
+        ${/^https?:\/\//.test(i.website || '') ? `<a class="btn btn-rand" href="${esc(i.website)}" target="_blank" rel="noopener">Website</a>` : ''}
+      </div>
+    </article>`;
+  }).join('');
+  toon('uitslag');
+}
+
+// ===== Offerte aanvragen =====
+$('matches').addEventListener('click', async e => {
+  const b = e.target.closest('[data-offerte]');
+  if (!b) return;
+  gekozenInstallateur = (await installateursLaden).find(i => i.id === b.dataset.offerte);
+  $('offerteSub').textContent = `Je aanvraag gaat naar ${gekozenInstallateur.naam}. Zij nemen zo snel mogelijk contact met je op.`;
+  $('offerteFout').textContent = '';
+  $('offerte').showModal();
+});
+$('offerteSluit').addEventListener('click', () => $('offerte').close());
+$('offerteForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const form = $('offerteForm');
+  if (!form.checkValidity()) { form.reportValidity(); return; }
+  const v = Object.fromEntries(new FormData(form));
+  const knop = $('offerteVerstuur');
+  knop.disabled = true; knop.textContent = 'Bezig met versturen…';
+  try {
+    if (!CONFIG.aanvraagFormulier) throw new Error('niet-ingesteld');
+    const r = await fetch(CONFIG.aanvraagFormulier, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ _subject: `Offerteaanvraag voor ${gekozenInstallateur.naam}`, installateur: gekozenInstallateur.naam, ...antwoorden, ...v })
+    });
+    if (!r.ok) throw new Error('verzenden');
+    form.innerHTML = `<h2>Aanvraag verstuurd</h2><p>${esc(gekozenInstallateur.naam)} neemt zo snel mogelijk contact met je op.</p>
+      <div class="dlg-knoppen"><button type="button" class="btn btn-inkt" onclick="document.getElementById('offerte').close()">Sluiten</button></div>`;
+  } catch (err) {
+    $('offerteFout').textContent = err.message === 'niet-ingesteld'
+      ? 'Offertes aanvragen is binnenkort mogelijk.'
+      : 'Versturen is niet gelukt. Probeer het later opnieuw.';
+    knop.disabled = false; knop.textContent = 'Verstuur aanvraag';
   }
-  if (!categorie && !zoek) document.getElementById('prodAlles').hidden = true;
-  const zegel = '<span class="zegel" aria-hidden="true">香</span>';
-  document.getElementById('productlijst').innerHTML = lijst.length
-    ? lijst.map(productKaart).join('')
-    : (categorie || zoek)
-      ? `<div class="leeg">${zegel}<b>Binnenkort</b><span>Hier komen binnenkort producten bij.</span><a class="btn btn-rand" href="./#producten">Bekijk alles</a></div>`
-      : `<div class="leeg">${zegel}<b>De eerste collectie komt eraan</b><span>We zoeken onze geuren met zorg uit. Meld je aan voor de nieuwsbrief en ruik als eerste wat er binnenkomt.</span></div>`;
-  if (categorie || zoek) document.getElementById('producten').scrollIntoView();
-})();
+});
 </script>
 </body>
 </html>

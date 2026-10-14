@@ -296,16 +296,16 @@ function hostNaam(url) {
 function raadCategorie(tekst, url = '') {
   const t = ' ' + tekst.toLowerCase() + ' ';
   const regels = [
-    ['Rituelen', /\b(cadeauset|giftset|gift set|geschenkset|starterset|ritueelset|incense set|ceremony set)/],
-    ['Branders', /\b(brander|houder|burner|censer|holder|wierookhouder|backflow|terugstroom|incense plate|xiang lu|ash catcher)/],
-    ['Geurzakjes', /\b(geurzakje|sachet|zakje|pouch|xiangnang)/],
-    ['Thee', /\b(thee|tea|pu-?erh|oolong|gongfu|gaiwan|theepot|teapot|theeset|matcha|jasmijn)/],
-    ['Wierook', /\b(wierook|incense|kegel|cone|spiraal|coil|stokje|stick|sandelhout|sandalwood|agarhout|agarwood|oud\b|osmanthus)/]
+    ['Startersets', /\b(starterset|starter set|starterspakket|set van 2|set of 2|2 paddles|4 paddles|paddle set|bundel|bundle)/],
+    ['Ballen', /\b(ballen|balls?\b|outdoor ball|indoor ball|x-?40|dura)/],
+    ['Tassen', /\b(tas|tassen|rugzak|backpack|bag|sling|duffel)/],
+    ['Kleding', /\b(shirt|t-shirt|polo|short|rok|skort|pet\b|cap\b|hoodie|sokken|schoen|schoenen|shoe|visor|kleding)/],
+    ['Accessoires', /\b(grip|overgrip|net\b|netset|edge guard|randbescherm|cover|hoes|polsband|lead tape)/],
+    ['Paddles', /\b(paddle|paddles|racket|carbon|kevlar|t700)/]
   ];
   for (const [cat, re] of regels) if (re.test(t)) return cat;
   let host = ''; try { host = new URL(url).hostname; } catch {}
-  if (/incense|wierook|xiang/.test(host)) return 'Wierook';
-  if (/tea|thee/.test(host)) return 'Thee';
+  if (/pickle|paddle/.test(host)) return 'Paddles';
   return '';
 }
 

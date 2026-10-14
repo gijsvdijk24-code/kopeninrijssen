@@ -1,11 +1,12 @@
-/* XIANG 香 — geur als ritueel */
+/* DINK — pickleball, met stijl */
 :root{
-  --inkt:#1A1714; --tekst:#1A1714; --grijs:#7A726A; --lijn:#E2DACD; --vlak:#EFE8DC;
-  --bg:#F7F3EC; --wit:#FFFDF9; --zegel:#9E2B25; --zegel-donker:#7E1F1A; --goud:#A8875A; --rood:#9E2B25;
+  --inkt:#14251E; --tekst:#14251E; --grijs:#6B6F67; --lijn:#DCD7C9; --vlak:#E8E4D8;
+  --bg:#F4F1EA; --wit:#FCFBF7; --zegel:#2F6B4F; --zegel-donker:#1E4A36; --goud:#6B6F67; --rood:#A33A2B;
+  --bal:#DDEB4D;
   /* oude namen, zodat bestaande pagina's blijven werken */
-  --zwart:#1A1714; --groen:#1A1714; --groen-donker:#000; --geel:#9E2B25; --oranje:#9E2B25; --accent:#9E2B25;
-  --serif:'Bodoni Moda',Didot,'Bodoni 72',Georgia,serif;
-  --sans:'Jost',system-ui,sans-serif;
+  --zwart:#14251E; --groen:#14251E; --groen-donker:#0B1712; --geel:#2F6B4F; --oranje:#2F6B4F; --accent:#2F6B4F;
+  --serif:'Instrument Serif',Georgia,serif;
+  --sans:'DM Sans',system-ui,sans-serif;
 }
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
@@ -18,7 +19,7 @@ img{max-width:100%;display:block}
 .ph{display:flex;align-items:center;justify-content:center;text-align:center;padding:16px;font-size:11px;font-weight:500;letter-spacing:.18em;text-transform:uppercase;color:#A59C90;background:var(--vlak)}
 .label-klein,.boven{font-size:11px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:var(--grijs)}
 .boven{margin-bottom:18px}
-.zegel{display:inline-flex;align-items:center;justify-content:center;background:var(--zegel);color:#F7F3EC;font-family:'Noto Serif SC',serif;font-weight:600;line-height:1}
+.bal{display:inline-block;border-radius:50%;background:var(--bal) radial-gradient(circle at 30% 35%,rgba(20,37,30,.22) 0 9%,transparent 10%),radial-gradient(circle at 68% 30%,rgba(20,37,30,.22) 0 8%,transparent 9%),radial-gradient(circle at 50% 70%,rgba(20,37,30,.22) 0 9%,transparent 10%);flex:0 0 auto}
 
 /* Knoppen */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:12px;height:54px;padding:0 34px;border-radius:0;font:inherit;font-weight:500;font-size:12px;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;border:1px solid transparent;cursor:pointer;transition:background .25s,color .25s,border-color .25s}
@@ -36,8 +37,8 @@ header{background:rgba(247,243,236,.94);backdrop-filter:blur(8px);-webkit-backdr
 .cat-nav a{text-decoration:none;padding:6px 0;border-bottom:1px solid transparent}
 .cat-nav a:hover{border-color:var(--zegel);color:var(--tekst)}
 .logo{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--inkt);justify-self:center}
-.logo .zegel{width:38px;height:38px;font-size:24px}
-.logo-tekst{font-family:var(--serif);font-size:30px;letter-spacing:.32em;line-height:1;margin-right:-.32em}
+.logo .bal{width:22px;height:22px}
+.logo-tekst{font-family:var(--serif);font-size:40px;letter-spacing:.02em;line-height:1}
 .header-acties{display:flex;align-items:center;gap:18px;justify-self:end}
 .zoek{display:flex;align-items:center;border-bottom:1px solid #C9BFB0;min-width:0}
 .zoek input{width:150px;max-width:36vw;height:36px;border:none;background:transparent;font:inherit;font-size:14px;padding:0 2px;outline:none;color:var(--tekst)}
@@ -101,7 +102,7 @@ header{background:rgba(247,243,236,.94);backdrop-filter:blur(8px);-webkit-backdr
 .manifest .wrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:56px;align-items:center}
 .manifest .zegel{width:120px;height:120px;font-size:76px}
 .manifest blockquote{margin:0;font-family:var(--serif);font-size:clamp(30px,3.6vw,52px);line-height:1.15;letter-spacing:-0.01em}
-.manifest blockquote i{color:#D9A79E}
+.manifest blockquote i{color:var(--bal)}
 .manifest cite{display:block;margin-top:28px;font-family:var(--sans);font-style:normal;font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:#A59C90}
 
 /* USP-balk */
@@ -149,14 +150,14 @@ footer .wrap{padding-top:88px;padding-bottom:36px;display:flex;flex-direction:co
 .grid-footer b{color:#EDE6DA;font-size:11px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;margin-bottom:6px}
 .grid-footer a{color:#A59C90;text-decoration:none}.grid-footer a:hover{color:#EDE6DA}
 .footer-merk{display:flex;align-items:center;gap:18px;margin-bottom:8px}
-.footer-merk .zegel{width:52px;height:52px;font-size:32px}
-.footer-logo{font-family:var(--serif);font-size:44px;letter-spacing:.3em;color:#EDE6DA;line-height:1}
+.footer-merk .bal{width:34px;height:34px}
+.footer-logo{font-family:var(--serif);font-size:72px;color:#EDE9DE;line-height:.9}
 .onderregel{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;font-size:11px;letter-spacing:.2em;text-transform:uppercase;border-top:1px solid #2E2925;padding-top:28px}
 
 /* Melding onderin */
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--inkt);color:var(--bg);padding:16px 22px;display:flex;gap:20px;align-items:center;opacity:0;pointer-events:none;transition:all .25s;z-index:50;max-width:calc(100% - 32px);font-size:14px}
 .toast.zichtbaar{opacity:1;transform:translateX(-50%);pointer-events:auto}
-.toast a{color:#E2B2AA;font-size:12px;letter-spacing:.16em;text-transform:uppercase}
+.toast a{color:var(--bal);font-size:12px;letter-spacing:.16em;text-transform:uppercase}
 .kruimel{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--grijs);padding-top:28px}
 .kruimel a{color:var(--grijs);text-decoration:none}
 
@@ -241,7 +242,7 @@ footer .wrap{padding-top:88px;padding-bottom:36px;display:flex;flex-direction:co
 .bevestiging{border:1px solid var(--lijn);background:var(--wit);padding:64px 32px;text-align:center;max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:16px;align-items:center}
 .bevestiging h1{font-family:var(--serif);font-weight:400}
 .bevestiging .vink{width:72px;height:72px;background:var(--zegel);display:flex;align-items:center;justify-content:center}
-.bevestiging .vink svg{stroke:#F7F3EC}
+.bevestiging .vink svg{stroke:#F4F1EA}
 
 @media (max-width:1080px){
   .header-rij{grid-template-columns:auto 1fr;padding-top:14px;padding-bottom:12px}
@@ -278,8 +279,29 @@ footer .wrap{padding-top:88px;padding-bottom:36px;display:flex;flex-direction:co
   .formulier,.keuze{grid-template-columns:1fr}
   .zoek{display:none}
   .mandje span{display:none}
-  .logo-tekst{font-size:24px}
-  .logo .zegel{width:32px;height:32px;font-size:20px}
+  .logo-tekst{font-size:32px}
+  .logo .bal{width:18px;height:18px}
   .regel .bedrag{min-width:0}
-  .footer-logo{font-size:34px}
+  .footer-logo{font-size:56px}
 }
+
+/* DINK: extra onderdelen */
+.hero h1 i{color:var(--zegel)}
+.hero-tag .bal{width:40px;height:40px}
+.cijfers{background:var(--inkt);color:#EDE9DE;border-bottom:none}
+.cijfers .boven{color:#9AA79F}
+.cijfers .sectie-kop h2{color:#EDE9DE}
+.cijfers .sectie-kop h2 i{color:var(--bal)}
+.cijfers .sectie-kop p{color:#B4BDB6}
+.grid-cijfer{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid #2C4237}
+.cijfer{padding:36px 28px 8px 0;display:flex;flex-direction:column;gap:12px}
+.cijfer + .cijfer{padding-left:28px;border-left:1px solid #2C4237}
+.cijfer b{font-family:var(--serif);font-weight:400;font-size:clamp(48px,5vw,76px);line-height:.95;color:#EDE9DE}
+.cijfer b small{font-size:.45em;color:var(--bal)}
+.cijfer span{color:#B4BDB6;font-weight:300;font-size:15px}
+.cijfer cite{font-style:normal;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#7F8C84}
+.geur .han{font-family:var(--serif);font-size:56px;color:var(--zegel);line-height:.9}
+.geur .noten{color:var(--zegel)}
+.leeg .bal{width:40px;height:40px;margin-bottom:6px}
+@media (max-width:1080px){.grid-cijfer{grid-template-columns:repeat(2,minmax(0,1fr))}.cijfer:nth-child(3){padding-left:0;border-left:none}}
+@media (max-width:640px){.grid-cijfer{grid-template-columns:1fr}.cijfer,.cijfer + .cijfer{padding:28px 0 8px;border-left:none}.cijfer + .cijfer{border-top:1px solid #2C4237}}
