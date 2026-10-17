@@ -2,7 +2,44 @@
   {
     "id": "test-holland",
     "url": "https://hollandinstallatie.nl/",
-    "status": "ophalen",
-    "aangemaakt": "2026-10-17T13:20:00Z"
+    "status": "klaar",
+    "aangemaakt": "2026-10-17T13:20:00Z",
+    "resultaat": {
+      "naam": "Holland Installatietechniek",
+      "plaats": "Vriezenveen",
+      "postcode": "7671 ER",
+      "diensten": [
+        "warmtepomp",
+        "zonnepanelen",
+        "cv-ketel",
+        "elektra",
+        "sanitair"
+      ],
+      "provincies": [
+        "Overijssel"
+      ],
+      "garantieJaren": null,
+      "keurmerk": false,
+      "keurmerkNaam": null,
+      "subsidiehulp": false,
+      "zakelijk": true,
+      "lokaal": false,
+      "omschrijving": "Holland Installatietechniek uit Vriezenveen voor warmtepompen, zonnepanelen, cv-ketels, elektra en loodgieterswerk.",
+      "naamOfficieel": "Holland Installatietechniek BV",
+      "toelichting": [
+        "Eenvoudige analyse zonder AI: controleer alle gegevens goed.",
+        "Naam gevonden via: de bedrijfsnaam met rechtsvorm (footer of contact)."
+      ],
+      "website": "https://hollandinstallatie.nl"
+    },
+    "methode": "regels",
+    "paginas": [
+      "https://hollandinstallatie.nl/",
+      "https://hollandinstallatie.nl/index.php/onze-diensten/",
+      "https://hollandinstallatie.nl/index.php/zonne-energie/",
+      "https://hollandinstallatie.nl/index.php/cv-en-solartechniek/",
+      "https://hollandinstallatie.nl/index.php/contact/",
+      "https://hollandinstallatie.nl/index.php/ons-team/"
+    ]
   }
 ]
