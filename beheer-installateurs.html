@@ -519,7 +519,9 @@ function toonResultaat(item) {
   if (!(r.provincies || []).length) zelf.push('het werkgebied');
   $('gevonden').innerHTML = `
     <b>${item.methode === 'ai' ? 'Ingevuld met AI' : 'Ingevuld met een eenvoudige analyse (zonder AI)'} op basis van ${(item.paginas || []).length} pagina's</b>
-    ${r.keurmerkNaam ? `Erkenning genoemd op de site: <strong>${esc(r.keurmerkNaam)}</strong>.` : ''}
+    ${r.naamOfficieel ? `Officiële naam: <strong>${esc(r.naamOfficieel)}</strong>.<br>` : ''}
+    ${r.keurmerkNaam ? `Erkenning genoemd op de site: <strong>${esc(r.keurmerkNaam)}</strong>.<br>` : ''}
+    ${(r.overigeDiensten || []).length ? `Biedt ook: ${esc(r.overigeDiensten.join(', '))}.<br>` : ''}
     ${(r.toelichting || []).length ? `<ul>${r.toelichting.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
     ${item.waarschuwing ? `<div class="let-op">${esc(item.waarschuwing)}</div>` : ''}
     <div class="let-op">Controleer alles en vul zelf nog in: ${esc(zelf.join(', '))}. Klik daarna op Opslaan.</div>`;
