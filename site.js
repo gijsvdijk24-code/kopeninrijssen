@@ -12,7 +12,7 @@
         <nav aria-label="Hoofdmenu">
           ${link('advies.html', 'Productadvies', 'advies')}
           ${link('aanmelden.html', 'Voor installateurs', 'aanmelden')}
-          <a href="installateur-vinden.html" class="btn btn-accent kop-knop" style="height:44px;padding:0 18px;font-size:15px;color:#fff;white-space:nowrap">Vind <span class="kort-weg">een </span>installateur</a>
+          <a href="installateur-vinden.html" class="btn btn-accent kop-knop" style="height:44px;padding:0 18px;font-size:15px;color:#fff;white-space:nowrap;gap:0">Vind&nbsp;<span class="kort-weg">een </span>installateur</a>
         </nav>
       </div>
     </header>`;

@@ -347,7 +347,7 @@ async function toonUitslag() {
   const a = antwoorden;
   const dienst = DIENSTEN.find(d => d.waarde === a.dienst);
   const klus = (dienst?.label || '').toLowerCase();
-  const kandidaten = installateurs.filter(i => (i.diensten || []).includes(a.dienst)).map(i => beoordeel(i, a));
+  const kandidaten = installateurs.filter(i => !i.verborgen && (i.diensten || []).includes(a.dienst)).map(i => beoordeel(i, a));
   const inRegio = kandidaten.filter(k => k.regio > 0).sort((x, y) => y.score - x.score);
   const buiten = kandidaten.filter(k => k.regio === 0).sort((x, y) => y.score - x.score);
   const top = (inRegio.length ? inRegio : buiten).slice(0, 3);
