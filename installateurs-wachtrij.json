@@ -2,7 +2,37 @@
   {
     "id": "amvcdp9a3",
     "url": "https://hollandinstallatie.nl/",
-    "status": "ophalen",
-    "aangemaakt": "2026-10-17T12:34:30.402Z"
+    "status": "klaar",
+    "aangemaakt": "2026-10-17T12:34:30.402Z",
+    "resultaat": {
+      "naam": "Uw groene installateur!",
+      "plaats": "Vriezenveen",
+      "postcode": "7671 ER",
+      "diensten": [
+        "zonnepanelen",
+        "cv-ketel",
+        "sanitair"
+      ],
+      "provincies": [
+        "Overijssel"
+      ],
+      "garantieJaren": null,
+      "keurmerk": false,
+      "keurmerkNaam": null,
+      "subsidiehulp": false,
+      "zakelijk": true,
+      "lokaal": false,
+      "omschrijving": "Installateur uit Vriezenveen voor zonnepanelen, cv-ketels en loodgieterswerk.",
+      "toelichting": [
+        "Eenvoudige analyse zonder AI: controleer alle gegevens goed."
+      ],
+      "website": "https://hollandinstallatie.nl"
+    },
+    "methode": "regels",
+    "paginas": [
+      "https://hollandinstallatie.nl/",
+      "https://hollandinstallatie.nl/index.php/onze-diensten/",
+      "https://hollandinstallatie.nl/index.php/contact/"
+    ]
   }
 ]
