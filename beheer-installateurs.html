@@ -50,6 +50,17 @@
 .auto-status:empty{display:none}
 .draai{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:draai .8s linear infinite;flex:0 0 auto}
 @keyframes draai{to{transform:rotate(360deg)}}
+.wacht{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:14px;align-items:center;background:var(--wit);border:1.5px dashed #C9CED8;border-radius:16px;padding:14px 18px}
+.wacht.klaar{border:1.5px solid var(--groen);background:#F5FBF8}
+.wacht.fout{border:1.5px solid #E4B4AE;background:#FFF8F7}
+.wacht .draai{border-color:rgba(20,33,58,.2);border-top-color:var(--inkt)}
+.wacht b{display:block}
+.wacht small{color:var(--grijs);font-size:14px;overflow-wrap:anywhere}
+.wacht .acties{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.wacht .acties .btn{height:40px;padding:0 14px;font-size:14px}
+.wacht .stip{width:12px;height:12px;border-radius:50%;background:var(--groen)}
+.wacht.fout .stip{background:#B42318}
+@media (max-width:700px){.wacht{grid-template-columns:auto minmax(0,1fr)}.wacht .acties{grid-column:1/-1;justify-content:flex-start}}
 .gevonden{background:var(--groen-zacht);border-radius:16px;padding:18px 20px;font-size:15px;color:#14533A}
 .gevonden b{display:block;margin-bottom:6px}
 .gevonden ul{margin:6px 0 0;padding-left:20px}
@@ -89,6 +100,17 @@
         <button class="btn btn-accent" id="nieuwKnop">+ Nieuwe installateur</button>
       </div>
     </div>
+    <div class="auto-blok" id="autoBlok" style="margin-bottom:20px">
+      <h3>Installateur toevoegen met een link</h3>
+      <p>Plak de website van een installateur. AI leest de site en maakt het profiel: diensten, werkgebied en een omschrijving. Je kunt ook meerdere links tegelijk plakken.</p>
+      <form class="auto-rij" id="autoForm">
+        <label for="autoUrl" class="sr-only">Website van de installateur</label>
+        <input id="autoUrl" type="text" inputmode="url" placeholder="www.installateur.nl" required autocomplete="off">
+        <button class="btn btn-accent" type="submit" id="autoKnop" style="height:52px">Toevoegen</button>
+      </form>
+      <div class="auto-status" id="autoStatus" role="status"></div>
+    </div>
+    <div id="wachtrijBlok" class="lijst" style="margin-bottom:24px" hidden></div>
     <div class="tellers" id="tellers"></div>
     <div class="werkbalk">
       <label for="zoek" class="sr-only">Zoeken</label>
@@ -109,16 +131,6 @@
       <button class="btn btn-tekst" id="terugKnop">← Terug naar overzicht</button>
     </div>
 
-    <div class="auto-blok" id="autoBlok">
-      <h3>Automatisch invullen vanaf de website</h3>
-      <p>Plak de website van de installateur. AI leest de site en vult de diensten, het werkgebied en een omschrijving voor je in. Dat duurt ongeveer een minuut.</p>
-      <form class="auto-rij" id="autoForm">
-        <label for="autoUrl" class="sr-only">Website van de installateur</label>
-        <input id="autoUrl" type="text" inputmode="url" placeholder="www.installateur.nl" required>
-        <button class="btn btn-accent" type="submit" id="autoKnop" style="height:52px">Analyseer website</button>
-      </form>
-      <div class="auto-status" id="autoStatus" role="status"></div>
-    </div>
     <div class="gevonden" id="gevonden" hidden></div>
 
     <details class="plak-blok" id="plakBlok">
@@ -328,7 +340,7 @@ function openPaneel(i) {
   vulFormulier(i || {});
   $('paneelTitel').textContent = i ? `${i.naam} bewerken` : 'Nieuwe installateur';
   $('plakBlok').hidden = !!i; $('plakBlok').open = false; $('plak').value = '';
-  $('autoBlok').hidden = !!i; $('gevonden').hidden = true; $('autoStatus').innerHTML = ''; $('autoUrl').value = '';
+  $('gevonden').hidden = true; huidigeAanvraag = null;
   $('overzicht').hidden = true; $('paneel').hidden = false;
   window.scrollTo({ top: 0 }); $('naam').focus({ preventScroll: true });
 }
@@ -386,7 +398,12 @@ $('form').addEventListener('submit', async e => {
       if (i >= 0) l[i] = profiel; else l.push(profiel);
       return l;
     });
-    toonOverzicht();
+    if (huidigeAanvraag) {
+      const weg = huidigeAanvraag; huidigeAanvraag = null;
+      wachtrij = wachtrij.filter(x => x.id !== weg);
+      wachtrijWijzig('Analyse verwerkt', l => l.filter(x => x.id !== weg)).catch(() => {});
+    }
+    toonOverzicht(); toonWachtrij();
     melding(`${naam} is ${bestaand ? 'bijgewerkt' : 'toegevoegd'}. Over ongeveer een minuut staat het live.`);
   } catch (err) { fout.textContent = err.message; }
   finally { knop.disabled = false; knop.textContent = 'Opslaan'; }
@@ -414,35 +431,79 @@ async function wachtrijWijzig(bericht, fn) {
   throw new Error('Het lukte niet om de analyse te starten. Probeer het opnieuw.');
 }
 let autoTimer = null;
+let wachtrij = [];
+let huidigeAanvraag = null;
 function autoStatus(tekst, draait = false) { $('autoStatus').innerHTML = tekst ? `${draait ? '<span class="draai"></span>' : ''}<span>${esc(tekst)}</span>` : ''; }
+const hostVan = u => { try { return new URL(u).hostname.replace(/^www\./, ''); } catch (e) { return u; } };
+
+function toonWachtrij() {
+  const blok = $('wachtrijBlok');
+  blok.hidden = !wachtrij.length;
+  blok.innerHTML = wachtrij.map(w => {
+    const r = w.resultaat || {};
+    if (w.status === 'ophalen') return `
+      <div class="wacht"><span class="draai"></span>
+        <div><b>${esc(hostVan(w.url))}</b><small>Website wordt gelezen en geanalyseerd… (meestal een minuut)</small></div>
+        <div class="acties"><button class="btn btn-rand" data-annuleer="${esc(w.id)}">Annuleren</button></div></div>`;
+    if (w.status === 'fout') return `
+      <div class="wacht fout"><span class="stip"></span>
+        <div><b>${esc(hostVan(w.url))}</b><small>Dat lukte niet: ${esc(w.fout || 'onbekende fout')}</small></div>
+        <div class="acties"><button class="btn btn-rand" data-opnieuw="${esc(w.id)}">Opnieuw</button><button class="btn btn-rand" data-annuleer="${esc(w.id)}">Weggooien</button></div></div>`;
+    return `
+      <div class="wacht klaar"><span class="stip"></span>
+        <div><b>${esc(r.naam || hostVan(w.url))}</b>
+          <small>${esc(r.plaats || '')}${r.plaats ? ' · ' : ''}${esc((r.diensten || []).map(d => dienstNaam[d] || d).join(', ') || 'geen diensten gevonden')} · klaar om te controleren</small></div>
+        <div class="acties"><button class="btn btn-accent" data-controleer="${esc(w.id)}">Controleren en toevoegen</button><button class="btn btn-rand" data-annuleer="${esc(w.id)}">Weggooien</button></div></div>`;
+  }).join('');
+  // Blijf kijken zolang er iets wordt geanalyseerd
+  clearInterval(autoTimer);
+  if (wachtrij.some(w => w.status === 'ophalen')) autoTimer = setInterval(verversWachtrij, 6000);
+}
+async function verversWachtrij() {
+  try {
+    const nieuw = (await wachtrijLaden()).lijst;
+    const wasBezig = wachtrij.filter(w => w.status === 'ophalen').map(w => w.id);
+    wachtrij = nieuw;
+    const klaarNu = wachtrij.filter(w => wasBezig.includes(w.id) && w.status === 'klaar');
+    if (klaarNu.length && !$('overzicht').hidden) melding(klaarNu.length === 1 ? `${klaarNu[0].resultaat?.naam || 'De installateur'} is klaar om te controleren.` : `${klaarNu.length} installateurs zijn klaar om te controleren.`);
+    toonWachtrij();
+  } catch (e) { /* volgende keer opnieuw */ }
+}
 
 $('autoForm').addEventListener('submit', async e => {
   e.preventDefault();
-  let url = $('autoUrl').value.trim();
-  if (!url) return;
-  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
-  try { new URL(url); } catch (x) { autoStatus('Dit is geen geldige link.'); return; }
-  const aanvraag = 'a' + Date.now().toString(36);
-  $('autoKnop').disabled = true; $('gevonden').hidden = true;
-  autoStatus('Analyse wordt gestart…', true);
+  const links = $('autoUrl').value.split(/[\s,;]+/).map(x => x.trim()).filter(Boolean)
+    .map(u => /^https?:\/\//i.test(u) ? u : 'https://' + u)
+    .filter(u => { try { return /\./.test(new URL(u).hostname); } catch (x) { return false; } });
+  if (!links.length) { autoStatus('Dit is geen geldige link.'); return; }
+  const bekend = new Set([...lijst.map(i => hostVan(i.website || '')), ...wachtrij.map(w => hostVan(w.url))]);
+  const dubbel = links.filter(u => bekend.has(hostVan(u)));
+  const nieuw = links.filter(u => !bekend.has(hostVan(u)));
+  if (!nieuw.length) { autoStatus(dubbel.length === 1 ? 'Deze installateur staat er al in.' : 'Deze installateurs staan er al in.'); return; }
+  $('autoKnop').disabled = true; autoStatus('Bezig met starten…', true);
+  const items = nieuw.map((url, n) => ({ id: 'a' + Date.now().toString(36) + n, url, status: 'ophalen', aangemaakt: new Date().toISOString() }));
   try {
-    await wachtrijWijzig('Website analyseren: ' + url, l => { l.push({ id: aanvraag, url, status: 'ophalen', aangemaakt: new Date().toISOString() }); return l.slice(-20); });
-  } catch (err) { autoStatus(err.message); $('autoKnop').disabled = false; return; }
-  autoStatus('De website wordt gelezen en geanalyseerd. Dit duurt meestal een minuut…', true);
-  const start = Date.now();
-  clearInterval(autoTimer);
-  autoTimer = setInterval(async () => {
-    let item;
-    try { item = (await wachtrijLaden()).lijst.find(x => x.id === aanvraag); } catch (x) { return; }
-    const teLang = Date.now() - start > 5 * 60 * 1000;
-    if (item && item.status === 'ophalen' && !teLang) return;
-    clearInterval(autoTimer); $('autoKnop').disabled = false;
-    if (!item || teLang) { autoStatus('Het duurt langer dan normaal. Kijk bij Actions op GitHub of de analyse goed is gegaan.'); return; }
-    if (item.status === 'fout') { autoStatus('Dat lukte niet: ' + (item.fout || 'onbekende fout')); }
-    else { toonResultaat(item); autoStatus(''); }
-    // Aanvraag opruimen uit de wachtrij
-    wachtrijWijzig('Analyse opgeruimd', l => l.filter(x => x.id !== aanvraag)).catch(() => {});
-  }, 6000);
+    await wachtrijWijzig('Website analyseren: ' + nieuw.map(hostVan).join(', '), l => [...l, ...items].slice(-30));
+    $('autoUrl').value = '';
+    autoStatus(dubbel.length ? `${dubbel.map(hostVan).join(', ')} stond er al in en is overgeslagen.` : '');
+    await verversWachtrij();
+  } catch (err) { autoStatus(err.message); }
+  finally { $('autoKnop').disabled = false; }
+});
+
+$('wachtrijBlok').addEventListener('click', async e => {
+  const b = e.target.closest('button'); if (!b) return;
+  const id = b.dataset.controleer || b.dataset.annuleer || b.dataset.opnieuw;
+  const w = wachtrij.find(x => x.id === id); if (!w) return;
+  if (b.dataset.controleer) {
+    openPaneel(null); toonResultaat(w); huidigeAanvraag = w.id; return;
+  }
+  b.disabled = true;
+  try {
+    if (b.dataset.opnieuw) await wachtrijWijzig('Opnieuw analyseren', l => l.map(x => x.id === id ? { id: x.id, url: x.url, status: 'ophalen', aangemaakt: x.aangemaakt } : x));
+    else await wachtrijWijzig('Analyse weggegooid', l => l.filter(x => x.id !== id));
+    await verversWachtrij();
+  } catch (err) { melding(err.message, 'fout'); b.disabled = false; }
 });
 
 function toonResultaat(item) {
@@ -465,12 +526,11 @@ function toonResultaat(item) {
   $('gevonden').hidden = false;
   $('gevonden').scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
-['terugKnop', 'annuleer'].forEach(id => $(id).addEventListener('click', () => clearInterval(autoTimer)));
 
 // ===== Start =====
 async function start() {
   if (!token) { $('login').hidden = false; $('overzicht').hidden = true; $('paneel').hidden = true; return; }
-  try { await laden(); toonOverzicht(); }
+  try { await laden(); toonOverzicht(); verversWachtrij(); }
   catch (e) {
     if (e.message === 'sleutel') { try { localStorage.removeItem('kir_token'); } catch (x) {} token = ''; $('login').hidden = false; melding('Deze sleutel werkt niet. Controleer de rechten.', 'fout'); }
     else melding(e.message, 'fout');
