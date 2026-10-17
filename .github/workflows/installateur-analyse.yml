@@ -1,0 +1,42 @@
+name: Installateur-website analyseren
+
+on:
+  push:
+    branches: [main]
+    paths: ['installateurs-wachtrij.json']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: installateur-analyse
+  cancel-in-progress: false
+
+jobs:
+  analyseren:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Website lezen en profiel maken
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: node scripts/analyseer-installateur.mjs
+      - name: Opslaan
+        run: |
+          if git diff --quiet installateurs-wachtrij.json; then
+            echo "Niets te analyseren."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Installateur-website geanalyseerd"
+          if ! git pull --rebase origin main; then
+            git rebase --abort
+            echo "Er kwam tussendoor een wijziging; de volgende run pakt het op."
+            exit 0
+          fi
+          git push origin main

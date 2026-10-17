@@ -41,6 +41,19 @@
 .plak-blok{background:var(--vlak);border-radius:16px;padding:16px 18px}
 .plak-blok summary{cursor:pointer;font-weight:600}
 .plak-blok textarea{width:100%;min-height:110px;margin-top:12px;padding:12px;border:1.5px solid #C9CED8;border-radius:12px;font:13px/1.5 ui-monospace,Menlo,Consolas,monospace;resize:vertical}
+.auto-blok{background:var(--inkt);color:#fff;border-radius:20px;padding:24px;display:flex;flex-direction:column;gap:14px}
+.auto-blok h3{font-size:22px}
+.auto-blok p{margin:0;color:#B8C1D3;font-size:15px}
+.auto-rij{display:flex;gap:10px;flex-wrap:wrap}
+.auto-rij input{flex:1 1 280px;min-width:0;height:52px;border:none;border-radius:12px;padding:0 16px;font:inherit;font-size:16px;color:var(--inkt)}
+.auto-status{display:flex;gap:10px;align-items:center;font-weight:600;font-size:15px}
+.auto-status:empty{display:none}
+.draai{width:18px;height:18px;border:2.5px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:draai .8s linear infinite;flex:0 0 auto}
+@keyframes draai{to{transform:rotate(360deg)}}
+.gevonden{background:var(--groen-zacht);border-radius:16px;padding:18px 20px;font-size:15px;color:#14533A}
+.gevonden b{display:block;margin-bottom:6px}
+.gevonden ul{margin:6px 0 0;padding-left:20px}
+.gevonden .let-op{margin-top:10px;color:#6A4A0C;background:#FFF7E6;border-radius:10px;padding:10px 12px}
 .score-veld{display:flex;gap:8px;align-items:center}
 .score-veld input{max-width:110px}
 .opslaan-balk{position:sticky;bottom:0;background:rgba(246,245,241,.95);backdrop-filter:blur(6px);border-top:1px solid var(--lijn);padding:14px 0;display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:4px}
@@ -95,6 +108,18 @@
       <h2 id="paneelTitel">Nieuwe installateur</h2>
       <button class="btn btn-tekst" id="terugKnop">← Terug naar overzicht</button>
     </div>
+
+    <div class="auto-blok" id="autoBlok">
+      <h3>Automatisch invullen vanaf de website</h3>
+      <p>Plak de website van de installateur. AI leest de site en vult de diensten, het werkgebied en een omschrijving voor je in. Dat duurt ongeveer een minuut.</p>
+      <form class="auto-rij" id="autoForm">
+        <label for="autoUrl" class="sr-only">Website van de installateur</label>
+        <input id="autoUrl" type="text" inputmode="url" placeholder="www.installateur.nl" required>
+        <button class="btn btn-accent" type="submit" id="autoKnop" style="height:52px">Analyseer website</button>
+      </form>
+      <div class="auto-status" id="autoStatus" role="status"></div>
+    </div>
+    <div class="gevonden" id="gevonden" hidden></div>
 
     <details class="plak-blok" id="plakBlok">
       <summary>Aanmelding uit de mail? Plak hier het profiel om alles in te vullen</summary>
@@ -303,6 +328,7 @@ function openPaneel(i) {
   vulFormulier(i || {});
   $('paneelTitel').textContent = i ? `${i.naam} bewerken` : 'Nieuwe installateur';
   $('plakBlok').hidden = !!i; $('plakBlok').open = false; $('plak').value = '';
+  $('autoBlok').hidden = !!i; $('gevonden').hidden = true; $('autoStatus').innerHTML = ''; $('autoUrl').value = '';
   $('overzicht').hidden = true; $('paneel').hidden = false;
   window.scrollTo({ top: 0 }); $('naam').focus({ preventScroll: true });
 }
@@ -365,6 +391,81 @@ $('form').addEventListener('submit', async e => {
   } catch (err) { fout.textContent = err.message; }
   finally { knop.disabled = false; knop.textContent = 'Opslaan'; }
 });
+
+// ===== Automatisch invullen vanaf een website =====
+const WACHTRIJ = 'https://api.github.com/repos/gijsvdijk24-code/kopeninrijssen/contents/installateurs-wachtrij.json';
+async function wachtrijLaden() {
+  const r = await fetch(WACHTRIJ + '?ref=main&t=' + Date.now(), { headers: headers(), cache: 'no-store' });
+  if (r.status === 404) return { lijst: [], sha: null };
+  if (!r.ok) throw new Error('GitHub gaf fout ' + r.status);
+  const d = await r.json();
+  let l = []; try { l = JSON.parse(van64(d.content)); } catch (e) {}
+  return { lijst: Array.isArray(l) ? l : [], sha: d.sha };
+}
+async function wachtrijWijzig(bericht, fn) {
+  for (let poging = 0; poging < 3; poging++) {
+    const { lijst: l, sha: s } = await wachtrijLaden();
+    const body = { message: bericht, content: naar64(JSON.stringify(fn(l), null, 2) + '\n'), branch: 'main' };
+    if (s) body.sha = s;
+    const r = await fetch(WACHTRIJ, { method: 'PUT', headers: headers(), body: JSON.stringify(body) });
+    if (r.ok) return;
+    if (r.status !== 409 && r.status !== 422) throw new Error('Opslaan mislukt (' + r.status + ').');
+  }
+  throw new Error('Het lukte niet om de analyse te starten. Probeer het opnieuw.');
+}
+let autoTimer = null;
+function autoStatus(tekst, draait = false) { $('autoStatus').innerHTML = tekst ? `${draait ? '<span class="draai"></span>' : ''}<span>${esc(tekst)}</span>` : ''; }
+
+$('autoForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  let url = $('autoUrl').value.trim();
+  if (!url) return;
+  if (!/^https?:\/\//i.test(url)) url = 'https://' + url;
+  try { new URL(url); } catch (x) { autoStatus('Dit is geen geldige link.'); return; }
+  const aanvraag = 'a' + Date.now().toString(36);
+  $('autoKnop').disabled = true; $('gevonden').hidden = true;
+  autoStatus('Analyse wordt gestart…', true);
+  try {
+    await wachtrijWijzig('Website analyseren: ' + url, l => { l.push({ id: aanvraag, url, status: 'ophalen', aangemaakt: new Date().toISOString() }); return l.slice(-20); });
+  } catch (err) { autoStatus(err.message); $('autoKnop').disabled = false; return; }
+  autoStatus('De website wordt gelezen en geanalyseerd. Dit duurt meestal een minuut…', true);
+  const start = Date.now();
+  clearInterval(autoTimer);
+  autoTimer = setInterval(async () => {
+    let item;
+    try { item = (await wachtrijLaden()).lijst.find(x => x.id === aanvraag); } catch (x) { return; }
+    const teLang = Date.now() - start > 5 * 60 * 1000;
+    if (item && item.status === 'ophalen' && !teLang) return;
+    clearInterval(autoTimer); $('autoKnop').disabled = false;
+    if (!item || teLang) { autoStatus('Het duurt langer dan normaal. Kijk bij Actions op GitHub of de analyse goed is gegaan.'); return; }
+    if (item.status === 'fout') { autoStatus('Dat lukte niet: ' + (item.fout || 'onbekende fout')); }
+    else { toonResultaat(item); autoStatus(''); }
+    // Aanvraag opruimen uit de wachtrij
+    wachtrijWijzig('Analyse opgeruimd', l => l.filter(x => x.id !== aanvraag)).catch(() => {});
+  }, 6000);
+});
+
+function toonResultaat(item) {
+  const r = item.resultaat || {};
+  vulFormulier({
+    naam: r.naam, plaats: r.plaats, website: r.website, omschrijving: r.omschrijving,
+    diensten: r.diensten, provincies: r.provincies, prijsniveau: 2, startBinnenWeken: 4,
+    garantieJaren: r.garantieJaren ?? 2, keurmerk: r.keurmerk, subsidiehulp: r.subsidiehulp, lokaal: r.lokaal, zakelijk: r.zakelijk
+  });
+  const zelf = ['het prijsniveau', 'hoe snel ze kunnen starten'];
+  if (r.garantieJaren == null) zelf.push('de garantie');
+  if (!(r.diensten || []).length) zelf.push('de diensten');
+  if (!(r.provincies || []).length) zelf.push('het werkgebied');
+  $('gevonden').innerHTML = `
+    <b>${item.methode === 'ai' ? 'Ingevuld met AI' : 'Ingevuld met een eenvoudige analyse (zonder AI)'} op basis van ${(item.paginas || []).length} pagina's</b>
+    ${r.keurmerkNaam ? `Erkenning genoemd op de site: <strong>${esc(r.keurmerkNaam)}</strong>.` : ''}
+    ${(r.toelichting || []).length ? `<ul>${r.toelichting.map(t => `<li>${esc(t)}</li>`).join('')}</ul>` : ''}
+    ${item.waarschuwing ? `<div class="let-op">${esc(item.waarschuwing)}</div>` : ''}
+    <div class="let-op">Controleer alles en vul zelf nog in: ${esc(zelf.join(', '))}. Klik daarna op Opslaan.</div>`;
+  $('gevonden').hidden = false;
+  $('gevonden').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+['terugKnop', 'annuleer'].forEach(id => $(id).addEventListener('click', () => clearInterval(autoTimer)));
 
 // ===== Start =====
 async function start() {
