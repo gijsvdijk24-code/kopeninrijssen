@@ -290,7 +290,7 @@
     "omschrijving": "Airco en warmtepompen voor appartementen en grachtenpanden."
   },
   {
-    "id": "uw-groene-installateur",
+    "id": "holland-installatietechniek",
     "naam": "Holland installatietechniek",
     "plaats": "Vriezenveen",
     "provincies": [
@@ -299,10 +299,7 @@
     "diensten": [
       "warmtepomp",
       "zonnepanelen",
-      "thuisbatterij",
       "cv-ketel",
-      "laadpaal",
-      "airco",
       "elektra",
       "sanitair"
     ],
@@ -314,7 +311,7 @@
     "subsidiehulp": false,
     "lokaal": false,
     "zakelijk": true,
-    "omschrijving": "Installateur uit Vriezenveen voor zonnepanelen, cv-ketels en loodgieterswerk.",
+    "omschrijving": "Holland Installatietechniek uit Vriezenveen voor warmtepompen, zonnepanelen, cv-ketels, elektra en loodgieterswerk.",
     "website": "https://hollandinstallatie.nl"
   }
 ]
